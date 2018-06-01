@@ -1,0 +1,22 @@
+---
+# possibly saved as sysinit/roles/ssh/tasks/main.yml
+- name: 新建/root/.ssh目录
+  file: dest=~/.ssh state=directory mode=0700  owner=root group=root
+- name: 拷贝root公钥
+  copy: src=./root/authorized_keys dest=~/.ssh/ mode=0644 owner=root group=root
+- name: 新建duowei用户
+  shell: useradd duowei
+- name: 新建/duowei/.ssh目录
+  file: dest=/home/duowei/.ssh state=directory mode=0700  owner=duowei group=duowei
+- name: 拷贝duowei公钥
+  copy: src=./duowei/authorized_keys dest=~/.ssh/ mode=0644 owner=duowei group=duowei
+- name: 允许mmm-pre0 root登录，允许duowei用户登录，修改ssh端口
+  shell: sed -i 's/Port 22/Port 18791/g' /etc/ssh/sshd_config
+  shell: sed -i 's/PermitRootLogin yes/#PermitRootLogin yes/g' /etc/ssh/sshd_config
+  shell: echo 'Allowusers root@mmm-pre0' >> /etc/ssh/sshd_config
+  shell: echo 'Allowusers duowei@*.*.*.*' >> /etc/ssh/sshd_config
+  service: name=ssh state=restarted
+
+
+
+	  

@@ -1,0 +1,9 @@
+---
+# possibly saved as sysinit/roles/cron-ntpdate/tasks/main.yml
+- name: 时间同步
+  apt: name=ntpdate state=latest
+  cron: minute=0 hour=0 job='/usr/sbin/ntpdate -u ntp.ubuntu.com &>/dev/null' name=Time syncchronization
+
+
+
+	  

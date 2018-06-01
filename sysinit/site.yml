@@ -1,0 +1,7 @@
+- hosts: localhost
+  user: root
+  vars:
+    user_home: duowei
+  tasks:
+  roles:
+    - user

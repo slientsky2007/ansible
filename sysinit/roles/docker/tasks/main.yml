@@ -1,0 +1,13 @@
+---
+# possibly saved as sysinit/roles/docker/tasks/main.yml
+- name: 安装docker
+  shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  apt: name=software-properties-common state=latest
+  shell: sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  apt: update_cache=yes
+  shell: apt-get install docker-ce=17.06.0~ce-0~ubuntu
+  shell: usermod -aG docker duowei
+
+
+
+	  

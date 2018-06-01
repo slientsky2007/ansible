@@ -1,0 +1,9 @@
+---
+# possibly saved as sysinit/roles/system-update/tasks/main.yml
+- name: 更新系统
+  apt: update_cache=yes
+  apt: upgrade=yes
+
+
+
+	  

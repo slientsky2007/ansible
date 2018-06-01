@@ -1,0 +1,25 @@
+---
+# possibly saved as sysinit/roles/jdk8/tasks/main.yml
+- name: check /home/{{user_home}}/tools
+  shell: ls /home/{{user_home}}/tools
+  register: result1
+  ignore_errors: True
+- name: check /home/{{user_home}}/apps
+  shell: ls /home/{{user_home}}/apps
+  register: result2
+  ignore_errors: True
+- name: 新建目录
+  file: dest=/home/{{user_home}}/tools state=directory owner={{user_home}} group={{user_home}}
+  when: result1|failed
+- name: 新建目录
+  file: dest=/home/{{user_home}}/apps state=directory owner={{user_home}} group={{user_home}}
+  when: result2|failed
+- name: 安装jdk8
+  copy: src=jdk-8u101-linux-x64.tar.gz dest=/home/{{user_home}}/tools/ mode=750 owner={{user_home}} group={{user_home}}
+  shell: cd /home/{{user_home}}/tools
+  shell: sudo -u {{user_home}} tar zxvf jdk-8u101-linux-x64.tar.gz
+  shell: mv jdk1.8.0_101 /home/{{user_home}}/apps/
+  shell: echo 'JAVA_HOME=/home/{{user_home}}/apps/jdk1.8.0_101' >> /etc/profiler
+  shell: source /etc/profiler
+
+
