@@ -5,18 +5,18 @@
   register: user_result
   ignore_errors: True
 
-- name: 新建用户
-  shell: adduser {{user_home}}
-  when: user_result|failed
-
 - name: check /home/{{user_home}}
   shell: ls /home/{{user_home}}
   register: dir_result
   ignore_errors: True
 
+- name: 新建用户{{user_home}}
+  shell: adduser {{user_home}}
+  when: user_result is failed
+
 - name: 新建用户目录
   file: dest=/home/{{user_home}} state=directory owner={{user_home}} group={{user_home}}
-  when: dir_result|failed
+  when: dir_result is failed
 
 - name: mkdir /home/{{user_home}}/apps
   file: dest=/home/{{user_home}}/apps state=directory mode=0754  owner={{user_home}} group={{user_home}}

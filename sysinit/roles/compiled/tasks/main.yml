@@ -1,0 +1,73 @@
+---
+# possibly saved as sysinit/roles/compiled/tasks/main.yml
+- name: Ubuntu更新系统
+  apt: update_cache=yes upgrade=yes
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: CentOS更新系统
+  yum: update_cache=yes upgrade=yes
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: Ubuntu安装gcc
+  apt: name=gcc state=present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  
+- name: Ubuntu安装automake
+  apt: name=automake state=present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  
+- name: Ubuntu安装autoconf
+  apt: name=autoconf state=present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: Ubuntu安装libtool
+  apt: name=libtool state=present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: Ubuntu安装make
+  apt: name=make state=present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  
+- name: Ubuntu安装libssl-dev
+  apt: name=libssl-dev state=present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: Ubuntu安装g++
+  apt: name=g++ state=present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: Ubuntu安装build-essential
+  apt: name=build-essential state=present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: CentOS安装gcc
+  yum: name=gcc state=present
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  
+- name: CentOS安装automake
+  yum: name=automake state=present
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  
+- name: CentOS安装autoconf
+  yum: name=autoconf state=present
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: CentOS安装libtool
+  yum: name=libtool state=present
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: CentOS安装make
+  yum: name=make state=present
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  
+- name: CentOS安装libssl-dev
+  yum: name=libssl-dev state=present
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: CentOS安装g++
+  yum: name=g++ state=present
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: CentOS安装build-essential
+  yum: name=build-essential state=present
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'

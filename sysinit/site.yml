@@ -1,7 +1,8 @@
 - hosts: localhost
   user: root
   vars:
-    user_home: duowei
+    user_home: juno
+    docker_version: 17.06.0~ce-0~ubuntu
   tasks:
   roles:
-    - user
+    - nodejs-npm-pm2

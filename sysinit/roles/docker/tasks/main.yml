@@ -1,13 +1,38 @@
 ---
 # possibly saved as sysinit/roles/docker/tasks/main.yml
-- name: 安装docker
+- name: check docker
+  shell: docker --version
+  register: docker_result
+  ignore_errors: True
+
+- name: 更新docker网站的ssl key
   shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-  apt: name=software-properties-common state=latest
-  shell: sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' and docker_result is failed
+
+- name: 安装software-properties-common
+  apt: name=software-properties-common state=present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' and docker_result is failed
+
+- name: 添加docker安装源
+  shell: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' and docker_result is failed
+
+- name: 更新安装源信息
   apt: update_cache=yes
-  shell: apt-get install docker-ce=17.06.0~ce-0~ubuntu
-  shell: usermod -aG docker duowei
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' and docker_result is failed
 
+- name: 安装docker-ce={{docker_version}}
+  apt: name=docker-ce={{docker_version}} state=present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' and docker_result is failed
 
+- name: check_user {{user_home}}
+  shell: id -u {{user_home}}
+  register: user_result
+  ignore_errors: True
 
-	  
+- name: 新建用户{{user_home}}
+  shell: adduser {{user_home}}
+  when: user_result is failed
+  
+- name: 添加新用户{{user_home}}，允许执行docker命令
+  shell: usermod -aG docker {{user_home}}

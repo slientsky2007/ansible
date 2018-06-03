@@ -1,0 +1,21 @@
+---
+# possibly saved as sysinit/roles/nodejs-npm-pm2/tasks/main.yml
+- name: 更新安装源
+  shell: curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+
+- name: Ubuntu安装nodejs
+  apt: name=nodejs state=present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: CentOS安装nodejs
+  yum: name=nodejs state=present
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  
+- name: npm更新
+  shell: npm install n -g
+
+- name: npm安装pm2
+  shell: npm install pm2 -g
+
+- name: pm2 更新
+  shell: pm2 update

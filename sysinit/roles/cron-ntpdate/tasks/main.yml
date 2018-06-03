@@ -1,9 +1,15 @@
 ---
 # possibly saved as sysinit/roles/cron-ntpdate/tasks/main.yml
-- name: 时间同步
-  apt: name=ntpdate state=latest
-  cron: minute=0 hour=0 job='/usr/sbin/ntpdate -u ntp.ubuntu.com &>/dev/null' name=Time syncchronization
+- name: Ubuntu安装ntpdate
+  apt: name=ntpdate state=present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
-
-
-	  
+- name: CentOS安装ntpdate
+  yum: name=ntpdate state=present
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  
+- name: 定时任务
+  cron: minute=0 hour=0 job='/usr/sbin/ntpdate -u ntp.ubuntu.com &>/dev/null' name='时间同步'
+ 
+- name: 执行一次同步时间
+  shell: ntpdate -u ntp.ubuntu.com

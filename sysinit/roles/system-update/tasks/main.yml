@@ -1,9 +1,9 @@
 ---
 # possibly saved as sysinit/roles/system-update/tasks/main.yml
-- name: 更新系统
-  apt: update_cache=yes
-  apt: upgrade=yes
+- name: Ubuntu更新系统
+  apt: update_cache=yes upgrade=yes
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
-
-
-	  
+- name: CentOS更新系统
+  yum: update_cache=yes upgrade=yes
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
