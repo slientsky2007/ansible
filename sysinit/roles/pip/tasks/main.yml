@@ -21,6 +21,14 @@
   yum: name=python-pip state=absent
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
+- name: Ubuntu安装python-apt
+  apt: name=python-apt state=present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: CentOS安装python-apt
+  yum: name=python-apt state=present
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  
 - name: 新建目录~/temps
   file: dest=~/temps state=directory owner={{user_home}} group={{user_home}}
   when: dir_result is failed

@@ -45,6 +45,15 @@
   shell: cd /home/{{user_home}}/tools && tar zxvf jdk-8u101-linux-x64.tar.gz -C /home/{{user_home}}/apps
   when: jdk8_result is failed
 
+- name: check_user {{user_home}}
+  shell: id -u {{user_home}}
+  register: user_result
+  ignore_errors: True
+  
+- name: 新建用户{{user_home}}
+  shell: adduser {{user_home}}
+  when: user_result is failed
+  
 - name: 修改所有者
   file: dest=/home/{{user_home}}/apps/jdk1.8.0_101 state=directory owner={{user_home}} group={{user_home}} recurse=yes
   when: jdk8_result is failed

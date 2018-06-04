@@ -1,0 +1,18 @@
+---
+# possibly saved as sysinit/roles/nfs-server/tasks/main.yml
+- name: Ubuntu安装nfs-kernel-server
+  apt: name=nfs-kernel-server state=present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  
+- name: CentOS安装nfs-kernel-server
+  apt: name=nfs-kernel-server state=present
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  
+- name: 更新挂载点配置文件
+  copy: src=exports dest=/etc/ mode=0644 owner=root group=root
+  
+- name: 重启服务rpcbind
+  service: name=rpcbind state=restarted
+
+- name: 重启服务nfs-kernel-server
+  shell: /etc/init.d/nfs-kernel-server restart

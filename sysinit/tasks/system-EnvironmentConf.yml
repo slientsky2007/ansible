@@ -1,0 +1,19 @@
+---
+# possibly saved as sysinit/system-EnvironmentConf.yml
+- name: check /root/.bashrc
+  shell: cat /root/.bashrc | grep "source /etc/profile"
+  register: result1
+  ignore_errors: True
+
+- name: check /home/{{user_home}}/.bashrc
+  shell: cat /home/{{user_home}}/.bashrc | grep "source /etc/profile"
+  register: result2
+  ignore_errors: True
+  
+- name: 添加source /etc/profile 到 /root/.bashrc
+  shell: echo "source /etc/profile" >> /root/.bashrc
+  when: result1 is failed
+  
+- name: 添加source /etc/profile 到 /home/{{user_home}}/.bashrc
+  shell: echo "source /etc/profile" >> /home/{{user_home}}/.bashrc
+  when: result2 is failed

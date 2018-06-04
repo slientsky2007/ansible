@@ -1,0 +1,8 @@
+#!/bin/bash
+
+cd /home/{{user_home}}/apps/LuaJIT-2.0.4
+mkdir /lib64/lib
+ln -s /usr/local/lib/libluajit-5.1.so.2 /lib64/lib/luajit-5.1.so.2
+echo 'export LUAJIT_LIB=/usr/local/lib' >> /etc/profile
+echo 'export LUAJIT_INC=/usr/local/include/luajit-2.0' >> /etc/profile
+make && make install

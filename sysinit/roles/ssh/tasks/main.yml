@@ -1,22 +1,37 @@
 ---
 # possibly saved as sysinit/roles/ssh/tasks/main.yml
+- name: check_user {{user_home}}
+  shell: id -u {{user_home}}
+  register: user_result
+  ignore_errors: True
+
 - name: 新建/root/.ssh目录
   file: dest=~/.ssh state=directory mode=0700  owner=root group=root
+
 - name: 拷贝root公钥
-  copy: src=./root/authorized_keys dest=~/.ssh/ mode=0644 owner=root group=root
-- name: 新建{{user_home}}用户
-  shell: useradd {{user_home}}
+  copy: src=root/authorized_keys dest=~/.ssh/ mode=0644 owner=root group=root
+
+- name: 新建用户{{user_home}}
+  shell: adduser {{user_home}}
+  when: user_result is failed
+
 - name: 新建/{{user_home}}/.ssh目录
   file: dest=/home/{{user_home}}/.ssh state=directory mode=0700  owner={{user_home}} group={{user_home}}
+
 - name: 拷贝{{user_home}}公钥
-  copy: src=./{{user_home}}/authorized_keys dest=~/.ssh/ mode=0644 owner={{user_home}} group={{user_home}}
-- name: 允许mmm-pre0 root登录，允许{{user_home}}用户登录，修改ssh端口
+  copy: src={{user_home}}/authorized_keys dest=/home/{{user_home}}/.ssh/ mode=0644 owner={{user_home}} group={{user_home}}
+
+- name: 修改ssh端口
   shell: sed -i 's/Port 22/Port 18791/g' /etc/ssh/sshd_config
+
+- name: 限制root用户远程登录
   shell: sed -i 's/PermitRootLogin yes/#PermitRootLogin yes/g' /etc/ssh/sshd_config
+
+- name: 允许mmm-pre0 root登录
   shell: echo 'Allowusers root@mmm-pre0' >> /etc/ssh/sshd_config
+
+- name: 允许{{user_home}}用户登录
   shell: echo 'Allowusers {{user_home}}@*.*.*.*' >> /etc/ssh/sshd_config
-  service: name=ssh state=restarted
 
-
-
-	  
+- name: 重启ssh服务
+  service: name=sshd state=restarted

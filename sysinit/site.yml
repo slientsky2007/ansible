@@ -1,8 +1,9 @@
 - hosts: localhost
   user: root
   vars:
-    user_home: juno
+    user_home: duowei
     docker_version: 17.06.0~ce-0~ubuntu
   tasks:
+    # - include: tasks/system-EnvironmentConf.yml
   roles:
-    - nodejs-npm-pm2
+    - nginx-1.12.1
