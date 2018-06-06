@@ -1,0 +1,4 @@
+---
+# possibly saved as sysinit/roles/aliyun-oss/meta/main.yml
+dependencies:
+  - { role: gdebi-core }

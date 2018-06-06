@@ -1,0 +1,33 @@
+---
+# possibly saved as sysinit/roles/aliyun-oss/tasks/main.yml
+- name: check ~/temps
+  shell: ls ~/temps
+  register: dir_result
+  ignore_errors: True
+
+- name: 新建目录~/temps
+  file: dest=~/temps state=directory owner={{user_home}} group={{user_home}}
+  when: dir_result is failed
+
+- name: 拷贝安装包
+  copy: src=ossfs_1.80.2_ubuntu16.04_amd64.deb dest=~/temps/ owner={{user_home}} group={{user_home}} mode=700
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: 安装oss客户端
+  shell: gdebi ~/temps/ossfs_1.80.2_ubuntu16.04_amd64.deb
+
+- name: 拷贝模板.passwd-ossfs.tem
+  template: src=.passwd-ossfs.tem dest=~/.passwd-ossfs owner=root group=root mode=0600
+
+- name: check 挂载目录是否存在
+  shell: ls /{{bucket_dir}}
+  register: bucket_dir_result
+  ignore_errors: True
+  
+- name: 新建挂载目录/{{bucket_dir}}
+  file: dest=/{{bucket_dir}} state=directory owner={{user_home}} group={{user_home}}
+  when: bucket_dir_result is failed
+
+- name: 执行挂载
+  shell: ossfs {{oss_name}} /{{bucket_dir}} -ourl={{oss_LAN_url}} -o allow_other
+  
