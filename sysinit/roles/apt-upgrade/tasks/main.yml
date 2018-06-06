@@ -1,0 +1,9 @@
+---
+# possibly saved as sysinit/roles/system-update/tasks/main.yml
+- name: Ubuntu更新系统
+  apt: upgrade=yes
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: CentOS更新系统
+  yum: upgrade=yes
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'

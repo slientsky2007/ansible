@@ -1,0 +1,10 @@
+---
+# possibly saved as sysinit/roles/nginx-ssl/tasks/main.yml
+- name: check nginx
+  shell: /home/{{user_home}}/apps/nginx/sbin/nginx -v
+  register: nginx_result
+  ignore_errors: True
+
+- name: 拷贝ssl证书到/home/{{user_home}}/apps/nginx/sbin/nginx/conf/
+  copy: src={{sslkey}}/ dest=/home/{{user_home}}/apps/nginx/sbin/nginx/conf/ owner={{user_home}} group={{user_home}} mode=744
+  when: nginx_result is success

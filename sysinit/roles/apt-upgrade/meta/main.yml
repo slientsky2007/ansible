@@ -1,0 +1,5 @@
+---
+# possibly saved as sysinit/roles/apt-upgrade/meta/main.yml
+dependencies:
+  - { role: aptitude }
+  - { role: apt-update }

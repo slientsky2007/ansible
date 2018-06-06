@@ -1,0 +1,55 @@
+---
+# possibly saved as sysinit/roles/system-environment/tasks/main.yml
+- name: check /root/.bashrc
+  shell: ls /root/.bashrc
+  register: bashrc_result1
+  ignore_errors: True
+  
+- name: check /root/.profile
+  shell: ls /root/.profile
+  register: profile_result1
+  ignore_errors: True
+  
+- name: 拷贝文件/root/.bashrc
+  copy: src=/etc/skel/.bashrc dest=/root/ mode=0644 owner=root group=root remote_src=true
+  when: bashrc_result1 is failed
+  
+- name: 拷贝文件/root/.profile
+  copy: src=/etc/skel/.profile dest=/root/ mode=0644 owner=root group=root remote_src=true
+  when: profile_result1 is failed
+
+- name: check /home/{{user_home}}/.bashrc
+  shell: ls /home/{{user_home}}/.bashrc
+  register: bashrc_result2
+  ignore_errors: True
+  
+- name: check /home/{{user_home}}/.profile
+  shell: ls /home/{{user_home}}/.profile
+  register: profile_result2
+  ignore_errors: True
+  
+- name: 拷贝文件/home/{{user_home}}/.bashrc
+  copy: src=/etc/skel/.bashrc dest=/home/{{user_home}}/ mode=0644 owner={{user_home}} group={{user_home}} remote_src=true
+  when: bashrc_result2 is failed
+  
+- name: 拷贝文件/home/{{user_home}}/.profile
+  copy: src=/etc/skel/.profile dest=/home/{{user_home}}/ mode=0644 owner={{user_home}} group={{user_home}} remote_src=true
+  when: profile_result2 is failed
+
+- name: 检查文件 /root/.bashrc 是否包含 source /etc/profile
+  shell: cat /root/.bashrc | grep "source /etc/profile"
+  register: result1
+  ignore_errors: True
+  
+- name: 检查文件 /home/{{user_home}}/.bashrc 是否包含 source /etc/profile 
+  shell: cat /home/{{user_home}}/.bashrc | grep "source /etc/profile"
+  register: result2
+  ignore_errors: True
+  
+- name: 添加source /etc/profile 到 /root/.bashrc
+  shell: echo "source /etc/profile" >> /root/.bashrc
+  when: result1 is failed
+  
+- name: 添加source /etc/profile 到 /home/{{user_home}}/.bashrc
+  shell: echo "source /etc/profile" >> /home/{{user_home}}/.bashrc
+  when: result2 is failed
