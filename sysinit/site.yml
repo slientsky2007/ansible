@@ -3,7 +3,7 @@
   vars:
     user_home: duowei
     docker_version: 17.06.0~ce-0~ubuntu
+    sslkey: duoweimmm.com
   tasks:
-    # - include: tasks/system-EnvironmentConf.yml
   roles:
-    - nginx-1.12.1
+    - nodejs-npm-pm2

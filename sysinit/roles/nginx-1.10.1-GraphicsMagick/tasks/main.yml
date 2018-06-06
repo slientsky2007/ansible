@@ -1,29 +1,5 @@
 ---
 # possibly saved as sysinit/roles/nginx-1.10.1-GraphicsMagick/tasks/main.yml
-- name: check_user {{user_home}}
-  shell: id -u {{user_home}}
-  register: user_result
-  ignore_errors: True
-
-- name: check /home/{{user_home}}
-  shell: ls /home/{{user_home}}
-  register: dir_result
-  ignore_errors: True
-
-- name: 新建用户{{user_home}}
-  shell: adduser {{user_home}}
-  when: user_result is failed
-
-- name: 新建用户目录
-  file: dest=/home/{{user_home}} state=directory owner={{user_home}} group={{user_home}}
-  when: dir_result is failed
-
-- name: mkdir /home/{{user_home}}/apps
-  file: dest=/home/{{user_home}}/apps state=directory mode=0754  owner={{user_home}} group={{user_home}}
-
-- name: mkdir /home/{{user_home}}/tools
-  file: dest=/home/{{user_home}}/tools state=directory mode=0754  owner={{user_home}} group={{user_home}}
-  
 - name: 拷贝所有安装包
   copy: src=nginx/ dest=/home/{{user_home}}/tools/ owner={{user_home}} group={{user_home}} mode=700
 
@@ -93,3 +69,6 @@
 
 - name: 编译安装nginx-1.10.1-GraphicsMagick
   shell: /home/{{user_home}}/tools/install-nginx-1.10.1-GraphicsMagick.sh
+  
+- name: 目录/home/{{user_home}}/apps/nginx/logs 授权用户{{user_home}}
+  file: dest=/home/{{user_home}}/apps/nginx/logs state=directory owner={{user_home}} group={{user_home}} recurse=yes

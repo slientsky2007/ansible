@@ -1,10 +1,4 @@
 ---
 # possibly saved as sysinit/roles/pip-supervisor/tasks/main.yml
-- name: check pip
-  shell: pip --version
-  register: pip_result
-  ignore_errors: True
-
 - name: pip安装supervisor
   shell: pip install -U supervisor
-  when: pip_result is succeeded

@@ -1,7 +1,23 @@
 ---
 # possibly saved as sysinit/roles/nodejs-npm-pm2/tasks/main.yml
+- name: check nodejs
+  shell: node --version
+  register: node_result
+  ignore_errors: True
+  
+- name: check npm
+  shell: npm --version
+  register: npm_result
+  ignore_errors: True
+  
+- name: check pm2
+  shell: pm2 --version
+  register: pm2_result
+  ignore_errors: True
+
 - name: 更新安装源
   shell: curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+  when: node_result is failed 
 
 - name: Ubuntu安装nodejs
   apt: name=nodejs state=present
@@ -11,11 +27,16 @@
   yum: name=nodejs state=present
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
   
-- name: npm更新
+- name: npm 安装n
   shell: npm install n -g
+  when: node_result is failed or npm_result is failed
+  
+- name: 更新node 和 npm
+  shell: n lts
 
 - name: npm安装pm2
   shell: npm install pm2 -g
-
-- name: pm2 更新
+  when: pm2_result is failed
+  
+- name: pm2并更新
   shell: pm2 update

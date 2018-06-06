@@ -1,13 +1,5 @@
 ---
 # possibly saved as sysinit/roles/compiled/tasks/main.yml
-- name: Ubuntu更新系统
-  apt: update_cache=yes upgrade=yes
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-
-- name: CentOS更新系统
-  yum: update_cache=yes upgrade=yes
-  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
-
 - name: Ubuntu安装gcc
   apt: name=gcc state=present
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
