@@ -1,0 +1,5 @@
+---
+# possibly saved as sysinit/roles/ssh/meta/main.yml
+dependencies:
+  - { role: user }
+  - { role: dns }

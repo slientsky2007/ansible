@@ -1,9 +1,13 @@
-- hosts: localhost
+- hosts: mmm-pre1
   user: root
   vars:
     user_home: duowei
+    # user_passwd: 
+    dnsserver_ip: 10.29.216.138
+    ansible_ip: 10.29.216.138
+    ansible_hostname: mmm-pre0
     docker_version: 17.06.0~ce-0~ubuntu
     sslkey: duoweimmm.com
   tasks:
   roles:
-    - nodejs-npm-pm2
+    - dns

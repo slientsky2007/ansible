@@ -10,8 +10,12 @@
   register: dir_result
   ignore_errors: True
 
+# - name: 新建用户{{user_home}}
+  # user: name={{user_home}} password={{user_passwd}} shell=/bin/bash uid=1000 home=/home/{{user_home}}
+  # when: user_result is failed
+  
 - name: 新建用户{{user_home}}
-  user: name={{user_home}} shell=/bin/bash group={{user_home}} uid=1000
+  user: name={{user_home}} shell=/bin/bash uid=1000 home=/home/{{user_home}}
   when: user_result is failed
 
 - name: 新建用户目录

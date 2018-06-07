@@ -1,0 +1,48 @@
+---
+# possibly saved as sysinit/roles/DNS/tasks/main.yml
+- name: check /etc/resolvconf/resolv.conf.d/base
+  shell: ls /etc/resolvconf/resolv.conf.d/base
+  register: base_result
+  ignore_errors: True
+  when: ansible_distribution == 'Ubuntu'
+
+- name: 拷贝base文件
+  template: src=base.tem dest=/etc/resolvconf/resolv.conf.d/base mode=0644 owner=root group=root
+  when: base_result is failed and ansible_distribution == 'Ubuntu'
+  
+- name: 检查/etc/resolvconf/resolv.conf.d/base是否已插入nameserver {{dnsserver_ip}}
+  shell: cat /etc/resolvconf/resolv.conf.d/base |grep 'nameserver {{dnsserver_ip}}'
+  register: check_result
+  ignore_errors: True
+  when: ansible_distribution == 'Ubuntu'
+
+- name: 检查到未插入nameserver {{dnsserver_ip}}时执行
+  shell: echo 'nameserver {{dnsserver_ip}}' >> /etc/resolvconf/resolv.conf.d/base
+  when: ansible_distribution == 'Ubuntu' and check_result is failed
+  
+- name: 加载新nameserver
+  shell: resolvconf -u
+  when: ansible_distribution == 'Ubuntu'
+  
+# - name: 禁用阿里云DNS
+  # shell: echo 'nameserver {{dnsserver_ip}}' > /etc/resolv.conf
+  # when: ansible_distribution == 'Ubuntu'
+  
+# - name: 刷新DNS缓存
+  # shell: /etc/init.d/nscd restart
+  # when: ansible_distribution == 'Ubuntu'
+  
+- name: 拷贝开机执行文件到/home/{{user_home}}/tasks/dns-init.sh
+  template: src=dns-init.tem dest=/home/{{user_home}}/tasks/dns-init.sh mode=0700 owner=root group=root
+
+- name: 执行dns初始化脚本
+  shell: /home/{{user_home}}/tasks/dns-init.sh
+
+- name: 检查是否已插入/home/{{user_home}}/tasks/dns-init.sh 到开机启动rc.local
+  shell: cat /etc/rc.local |grep '/home/{{user_home}}/tasks/dns-init.sh'
+  register: check_result2
+  ignore_errors: True
+  
+- name: 如果没有插入开机启动项/etc/rc.local则执行
+  shell: sed -i '/exit 0/i\/home/{{user_home}}/tasks/dns-init.sh' /etc/rc.local
+  when: check_result2 is failed
