@@ -1,5 +1,5 @@
 ---
-# possibly saved as ansible/pre-servers/roles/redis-cluster/tasks
+# possibly saved as pre-servers/roles/redis-cluster/tasks
 - name: 检查solr是否已安装
   shell: ls /home/{{user_home}}/apps/solr-5.4.0
   register: solr_result

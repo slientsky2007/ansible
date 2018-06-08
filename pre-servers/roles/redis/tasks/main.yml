@@ -1,5 +1,5 @@
 ---
-# possibly saved as sysinit/roles/redis/tasks/main.yml
+# possibly saved as pre-servers/roles/redis/tasks/main.yml
 - name: 拷贝安装包redis-3.2.9.tar.gz
   copy: src=redis-3.2.9.tar.gz dest=/home/{{user_home}}/tools/ owner={{user_home}} group={{user_home}} mode=700
   

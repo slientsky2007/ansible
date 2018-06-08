@@ -1,4 +1,4 @@
 ---
-# possibly saved as ansible/pre-servers/roles/redis-cluster/meta/main.yml
+# possibly saved as pre-servers/roles/redis-cluster/meta/main.yml
 dependencies:
   - { role: redis }

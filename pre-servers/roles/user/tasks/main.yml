@@ -1,5 +1,5 @@
 ---
-# possibly saved as sysinit/roles/user/tasks/main.yml
+# possibly saved as pre-servers/roles/user/tasks/main.yml
 - name: check_user {{user_home}}
   shell: id -u {{user_home}}
   register: user_result

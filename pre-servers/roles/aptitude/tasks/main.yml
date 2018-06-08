@@ -1,5 +1,5 @@
 ---
-# possibly saved as sysinit/roles/aptitude/tasks/main.yml
+# possibly saved as pre-servers/roles/aptitude/tasks/main.yml
 - name: Ubuntu安装aptitude
   apt: name=aptitude state=present update_cache=yes
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'

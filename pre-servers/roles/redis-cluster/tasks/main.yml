@@ -1,5 +1,5 @@
 ---
-# possibly saved as ansible/pre-servers/roles/redis-cluster/tasks
+# possibly saved as pre-servers/roles/redis-cluster/tasks
 - name: 检查redis-server是否已安装
   shell: redis-server -v
   register: result

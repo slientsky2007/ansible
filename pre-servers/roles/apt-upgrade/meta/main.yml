@@ -1,4 +1,4 @@
 ---
-# possibly saved as sysinit/roles/apt-upgrade/meta/main.yml
+# possibly saved as pre-servers/roles/apt-upgrade/meta/main.yml
 dependencies:
   - { role: aptitude }
