@@ -1,0 +1,6 @@
+---
+# possibly saved as sysinit/roles/redis-cluster/meta/main.yml
+dependencies:
+  - { role: compiled }
+  - { role: user }
+  - { role: ruby }

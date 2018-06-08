@@ -1,0 +1,40 @@
+---
+# possibly saved as ansible/pre-servers/roles/redis-cluster/tasks
+- name: 检查redis-server是否已安装
+  shell: redis-server -v
+  register: result
+  ignore_errors: True
+  
+- name: 新建目录/home/{{user_home}}/apps/redis-cluster/7000
+  file: dest=/home/{{user_home}}/apps/redis-cluster/7000 state=directory owner={{user_home}} group={{user_home}}
+  when: result is succeeded
+
+- name: 新建目录/home/{{user_home}}/apps/redis-cluster/7001
+  file: dest=/home/{{user_home}}/apps/redis-cluster/7001 state=directory owner={{user_home}} group={{user_home}}
+  when: result is succeeded
+  
+- name: 拷贝群集节点7000 配置文件
+  template: src=redis-cluster/redis-7000.conf.tem dest=/home/{{user_home}}/apps/redis-cluster/7000/redis.conf owner={{user_home}} group={{user_home}} mode=0700
+  when: result is succeeded
+  
+- name: 拷贝群集节点7001 配置文件
+  template: src=redis-cluster/redis-7001.conf.tem dest=/home/{{user_home}}/apps/redis-cluster/7001/redis.conf owner={{user_home}} group={{user_home}} mode=0700
+  when: result is succeeded
+  
+- name: check redis-cluster/7000服务是否已运行
+  shell: ps axu|grep "redis-server 0.0.0.0:7000"|grep -v 'grep'
+  register: result7000
+  ignore_errors: True
+  
+- name: check redis-cluster/7001服务是否已运行
+  shell: ps axu|grep "redis-server 0.0.0.0:7001"|grep -v 'grep'
+  register: result7001
+  ignore_errors: True
+  
+- name: 启动群集节点7000
+  shell: redis-server /home/{{user_home}}/apps/redis-cluster/7000/redis.conf
+  when: result is succeeded and result7000 is failed
+  
+- name: 启动群集节点7001
+  shell: redis-server /home/{{user_home}}/apps/redis-cluster/7001/redis.conf
+  when: result is succeeded and result7001 is failed

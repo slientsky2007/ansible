@@ -1,0 +1,14 @@
+- hosts: mmm-pre1 mmm-pre2 mmm-pre3
+  user: root
+  vars:
+    user_home: duowei
+    # user_passwd: 
+    cluster1_0: *.*.*.*:7000
+    cluster1_1: *.*.*.*:7001
+    cluster2_0: *.*.*.*:7000
+    cluster2_1: *.*.*.*:7001
+    cluster3_0: *.*.*.*:7000
+    cluster3_1: *.*.*.*:7001
+  roles:
+    - redis-cluster
+  tasks:
