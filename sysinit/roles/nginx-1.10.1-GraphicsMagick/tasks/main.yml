@@ -1,22 +1,47 @@
 ---
 # possibly saved as sysinit/roles/nginx-1.10.1-GraphicsMagick/tasks/main.yml
+- name: check nginx
+  shell: /home/{{user_home}}/apps/nginx/sbin/nginx -v
+  register: nginx_result
+  ignore_errors: True
+
 - name: 拷贝所有安装包
   copy: src=nginx/ dest=/home/{{user_home}}/tools/ owner={{user_home}} group={{user_home}} mode=700
 
 - name: 解压安装包nginx-1.10.1.tar.gz
   shell: cd /home/{{user_home}}/tools && tar -xvf nginx-1.10.1.tar.gz
+  when: nginx_result is failed
 
 - name: 解压安装包ngx_devel_kit-0.3.0.tar.gz
   shell: cd /home/{{user_home}}/tools && tar -xvf ngx_devel_kit-0.3.0.tar.gz
+  when: nginx_result is failed
+  
+- name: check openssl-1.0.1t
+  shell: ls /home/{{user_home}}/apps/openssl-1.0.1t
+  register: openssl_result
+  ignore_errors: True
   
 - name: 解压安装包openssl-1.0.1t.tar.gz
   shell: cd /home/{{user_home}}/tools && tar -xvf openssl-1.0.1t.tar.gz -C /home/{{user_home}}/apps
+  when: openssl_result is failed
+  
+- name: check pcre-8.38
+  shell: ls /home/{{user_home}}/apps/pcre-8.38
+  register: pcre_result
+  ignore_errors: True
 
 - name: 解压安装包pcre-8.38.tar.gz
   shell: cd /home/{{user_home}}/tools && tar -xvf pcre-8.38.tar.gz -C /home/{{user_home}}/apps
+  when: pcre_result is failed
+  
+- name: check zlib-1.2.8
+  shell: ls /home/{{user_home}}/apps/zlib-1.2.8
+  register: zlib_result
+  ignore_errors: True
   
 - name: 解压安装包zlib-1.2.8.tar.gz
   shell: cd /home/{{user_home}}/tools && tar -xvf zlib-1.2.8.tar.gz -C /home/{{user_home}}/apps
+  when: zlib_result is failed
 
 - name: Ubuntu安装依赖libreadline6-dev
   apt: name=libreadline6-dev state=present
@@ -36,39 +61,72 @@
 
 - name: 解压安装包lua-nginx-module-0.10.5.tar.gz
   shell: cd /home/{{user_home}}/tools && tar -xvf lua-nginx-module-0.10.5.tar.gz
+  
+- name: check LuaJIT-2.0.4
+  shell: ls /home/{{user_home}}/apps/LuaJIT-2.0.4
+  register: luaJIT_result
+  ignore_errors: True
 
 - name: 解压安装包LuaJIT-2.0.4.tar.gz
   shell: cd /home/{{user_home}}/tools && tar -xvf LuaJIT-2.0.4.tar.gz -C /home/{{user_home}}/apps
+  when: luaJIT_result is failed
+  
+- name: check GraphicsMagick-1.3.24
+  shell: ls /home/{{user_home}}/apps/GraphicsMagick-1.3.24
+  register: GraphicsMagick_result
+  ignore_errors: True
   
 - name: 解压安装包GraphicsMagick-1.3.24.tar.gz
   shell: cd /home/{{user_home}}/tools && tar -xvf GraphicsMagick-1.3.24.tar.gz -C /home/{{user_home}}/apps
+  when: GraphicsMagick_result is failed
 
+- name: 修改openssl-1.0.1t属主
+  file: dest=/home/{{user_home}}/apps/openssl-1.0.1t state=directory owner={{user_home}} group={{user_home}} recurse=yes
+  
 - name: 编译nginx模块openssl-1.0.1t
   shell: cd /home/{{user_home}}/apps/openssl-1.0.1t && ./config && make && make install
+  when: openssl_result is failed
+  
+- name: 修改pcre-8.38属主
+  file: dest=/home/{{user_home}}/apps/pcre-8.38 state=directory owner={{user_home}} group={{user_home}} recurse=yes
+
+- name: 编译nginx模块pcre-8.38
+  shell: cd /home/{{user_home}}/apps/pcre-8.38 && ./configure && make && make install
+  when: pcre_result is failed  
+
+- name: 修改zlib-1.2.8属主
+  file: dest=/home/{{user_home}}/apps/zlib-1.2.8 state=directory owner={{user_home}} group={{user_home}} recurse=yes
   
 - name: 编译nginx模块zlib-1.2.8
   shell: cd /home/{{user_home}}/apps/zlib-1.2.8 && ./configure && make && make install
-  
-- name: 编译nginx模块zlib-1.2.8
-  shell: cd /home/{{user_home}}/apps/pcre-8.38 && ./configure && make && make install
+  when: zlib_result is failed
 
 - name: 拷贝安装模板LuaJIT-2.0.4.tem
   template: src=LuaJIT-2.0.4.tem dest=/home/{{user_home}}/tools/install-LuaJIT-2.0.4.sh owner=root group=root mode=0700
-
+  
 - name: 编译安装LuaJIT-2.0.4
   shell: /home/{{user_home}}/tools/install-LuaJIT-2.0.4.sh
+  when: luaJIT_result is failed
 
 - name: 拷贝安装模板GraphicsMagick-1.3.24.tem
   template: src=GraphicsMagick-1.3.24.tem dest=/home/{{user_home}}/tools/install-GraphicsMagick-1.3.24.sh owner=root group=root mode=0700
 
 - name: 编译安装GraphicsMagick-1.3.24
   shell: /home/{{user_home}}/tools/install-GraphicsMagick-1.3.24.sh
+  when: GraphicsMagick_result is failed
 
 - name: 拷贝安装模板nginx-1.10.1-GraphicsMagick.tem
   template: src=nginx-1.10.1-GraphicsMagick.tem dest=/home/{{user_home}}/tools/install-nginx-1.10.1-GraphicsMagick.sh owner=root group=root mode=0700
 
 - name: 编译安装nginx-1.10.1-GraphicsMagick
   shell: /home/{{user_home}}/tools/install-nginx-1.10.1-GraphicsMagick.sh
+  when: nginx_result is failed
   
 - name: 目录/home/{{user_home}}/apps/nginx/logs 授权用户{{user_home}}
   file: dest=/home/{{user_home}}/apps/nginx/logs state=directory owner={{user_home}} group={{user_home}} recurse=yes
+  
+- name: 最后清理/home/{{user_home}}/tools/nginx*
+  shell: rm -rf /home/{{user_home}}/tools/nginx*
+
+- name: 最后清理/home/{{user_home}}/tools/ngx*
+  shell: rm -rf /home/{{user_home}}/tools/ngx*
