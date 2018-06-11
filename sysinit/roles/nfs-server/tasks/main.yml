@@ -1,11 +1,11 @@
 ---
 # possibly saved as sysinit/roles/nfs-server/tasks/main.yml
 - name: Ubuntu安装nfs-kernel-server
-  apt: name=nfs-kernel-server state=present
+  apt: name=nfs-kernel-server state=present update_cache=yes
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   
 - name: CentOS安装nfs-kernel-server
-  apt: name=nfs-kernel-server state=present
+  apt: name=nfs-kernel-server state=present update_cache=yes
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
   
 - name: 更新挂载点配置文件

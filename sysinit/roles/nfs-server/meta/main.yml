@@ -1,4 +1,0 @@
----
-# possibly saved as sysinit/roles/nginx-1.12.1/meta/main.yml
-dependencies:
-  - { role: apt-update }
