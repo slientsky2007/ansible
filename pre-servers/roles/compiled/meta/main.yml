@@ -1,4 +1,0 @@
----
-# possibly saved as pre-servers/roles/nginx-1.12.1/meta/main.yml
-dependencies:
-  - { role: apt-upgrade }

@@ -1,5 +1,0 @@
----
-# possibly saved as pre-servers/roles/system-update/tasks/main.yml
-- name: Ubuntu更新系统
-  apt: update_cache=yes upgrade=yes
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'

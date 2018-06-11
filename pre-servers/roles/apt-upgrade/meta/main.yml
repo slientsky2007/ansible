@@ -1,4 +1,0 @@
----
-# possibly saved as pre-servers/roles/apt-upgrade/meta/main.yml
-dependencies:
-  - { role: aptitude }

@@ -43,11 +43,21 @@
   shell: ps axu|grep "zookeeper"|grep -v 'grep'
   register: zookeeper_server_result
   ignore_errors: True
+
+- name: 拷贝脚本/home/{{user_home}}/tools/zookeeper-myid.sh
+  template: src=zookeeper-myid.tem dest=/home/{{user_home}}/tools/zookeeper-myid.sh owner=root group=root mode=0700
   
 - name: 配置zookeeper /home/{{user_home}}/datas/zookeeper/data/myid
-  shell: echo $HOSTNAME |grep -Eo '[0-9]+' > /home/{{user_home}}/datas/zookeeper/data/myid
-  when: zookeeper_server_result is failed
+  shell: /home/{{user_home}}/tools/zookeeper-myid.sh
 
 - name: 启动zookeeper
-  shell: /home/{{user_home}}/apps/zookeeper-3.4.6/bin/zkServer.sh start
+  shell: source /etc/profile && /home/{{user_home}}/apps/zookeeper-3.4.6/bin/zkServer.sh restart
+  args:
+    executable: /bin/bash
   when: zookeeper_server_result is failed
+  
+- name: 拷贝脚本/home/{{user_home}}/tools/solr-cloud.sh
+  template: src=solr-cloud.tem dest=/home/{{user_home}}/tools/solr-cloud.sh owner=root group=root mode=0700
+
+- name: 启动solr cloud
+  shell: /home/{{user_home}}/tools/solr-cloud.sh

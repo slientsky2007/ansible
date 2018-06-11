@@ -1,5 +1,5 @@
 ---
-# possibly saved as sysinit/roles/redis-cluster/meta/main.yml
+# possibly saved as pre-servers/roles/redis-cluster/meta/main.yml
 dependencies:
   - { role: compiled }
   - { role: user }

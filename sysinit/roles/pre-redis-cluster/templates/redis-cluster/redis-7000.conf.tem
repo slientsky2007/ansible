@@ -498,9 +498,9 @@ slave-priority 100
 # Please note that changing the name of commands that are logged into the
 # AOF file or transmitted to slaves may cause problems.
 
-rename-command CONFIG CONFIG_BqxsN89f07PSS0SS
-rename-command SHUTDOWN SHUTDOWN_BqxsN89f07PSS0SS
-rename-command FLUSHDB FLUSHDB_BqxsN89f07PSS0SS
+rename-command CONFIG CONFIG_lyO0axkaXmfSo4NP
+rename-command SHUTDOWN SHUTDOWN_lyO0axkaXmfSo4NP
+rename-command FLUSHDB FLUSHDB_lyO0axkaXmfSo4NP
 
 ################################### LIMITS ####################################
 

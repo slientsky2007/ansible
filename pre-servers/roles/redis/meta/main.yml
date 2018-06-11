@@ -1,6 +1,0 @@
----
-# possibly saved as pre-servers/roles/redis-cluster/meta/main.yml
-dependencies:
-  - { role: compiled }
-  - { role: user }
-  - { role: ruby }

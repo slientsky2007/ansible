@@ -10,5 +10,5 @@
     cluster3_0: *.*.*.*:7000
     cluster3_1: *.*.*.*:7001
   roles:
-    - redis-cluster
+    - pre-redis-cluster
   tasks:

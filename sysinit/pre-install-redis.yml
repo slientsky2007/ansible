@@ -1,0 +1,8 @@
+- hosts: mmm-pre1 mmm-pre2 mmm-pre3
+  user: root
+  vars:
+    user_home: duowei
+    # user_passwd: 
+  tasks:
+  roles:
+    - redis

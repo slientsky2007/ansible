@@ -1,9 +1,0 @@
----
-# possibly saved as pre-servers/roles/ruby/tasks/main.yml
-- name: Ubuntu安装ruby
-  apt: name=ruby state=present update_cache=yes
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-
-- name: CentOS安装ruby
-  yum: name=ruby state=present update_cache=yes
-  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
