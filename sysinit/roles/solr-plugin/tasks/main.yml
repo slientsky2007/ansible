@@ -1,0 +1,25 @@
+---
+# possibly saved as sysinit/roles/pre-solr-plugin/tasks/main.yml
+- name: mysql-connector-java-5.1.30.jar
+  copy: src=mysql-connector-java-5.1.30.jar dest=/home/{{user_home}}/apps/solr-5.4.0/contrib/dataimporthandler/lib/ mode=750 owner=root group=root
+
+- name: ojdbc6.jar
+  copy: src=ojdbc6.jar dest=/home/{{user_home}}/apps/solr-5.4.0/contrib/dataimporthandler/lib/ mode=750 owner=root group=root
+
+- name: ik-analyzer-solr5-5.x.jar
+  copy: src=ik-analyzer-solr5-5.x.jar dest=/home/{{user_home}}/apps/solr-5.4.0/server/solr-webapp/webapp/WEB-INF/lib/ mode=750 owner=root group=root
+
+- name: jcseg-core-1.9.7.jar
+  copy: src=jcseg-core-1.9.7.jar dest=/home/{{user_home}}/apps/solr-5.4.0/contrib/analysis-extras/lib/ mode=750 owner=root group=root
+
+- name: jcseg-analyzer-1.9.7.jar
+  copy: src=jcseg-analyzer-1.9.7.jar dest=/home/{{user_home}}/apps/solr-5.4.0/contrib/analysis-extras/lib/ mode=750 owner=root group=root
+  
+- name: 拷贝脚本/home/{{user_home}}/tools/solr-cloud.sh
+  template: src=solr-cloud.tem dest=/home/{{user_home}}/tools/solr-cloud.sh owner=root group=root mode=0700
+
+- name: 重新启动solr cloud
+  shell: /home/{{user_home}}/tools/solr-cloud.sh
+
+
+
