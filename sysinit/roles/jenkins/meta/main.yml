@@ -1,0 +1,4 @@
+---
+# possibly saved as sysinit/roles/jenkins/meta/main.yml
+dependencies:
+  - { role: jdk8 }

@@ -1,0 +1,24 @@
+---
+# possibly saved as sysinit/roles/jenkins/tasks/main.yml
+- name: check jenkins.war
+  shell: ls /home/{{user_home}}/apps/jenkins.war
+  register: jenkins_war_result
+  ignore_errors: True
+
+- name: check jenkins programe
+  shell: ps axu|grep jenkins|grep -v grep
+  register: jenkins_programe_result
+  ignore_errors: True
+
+- name: 下载最新jenkins.war 包
+  get_url: url=http://mirrors.jenkins.io/war-stable/latest/jenkins.war dest=/home/{{user_home}}/apps/jenkins.war mode=700 owner={{user_home}} group={{user_home}}
+  when: jenkins_war_result is failed
+
+- name: 拷贝模板
+  template: src=jenkins_start.sh.tem dest=/home/{{user_home}}/apps/jenkins_start.sh owner={{user_home}} group={{user_home}} mode=0700
+  
+- name: 运行jenkins
+  become: yes
+  become_user: "{{user_home}}"
+  shell: /home/{{user_home}}/apps/jenkins_start.sh
+  when: jenkins_programe_result is failed

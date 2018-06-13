@@ -1,0 +1,6 @@
+#!/bin/bash
+
+source /etc/profile
+cd /home/{{user_home}}/apps
+ulimit -c unlimited
+nohup java -Xms1024m -Xmx1024m -Duser.timezone=GMT+08  -jar jenkins.war --httpPort=9090 >/home/{{user_home}}/logs/jenkins.log 2>&1 &
