@@ -1,0 +1,13 @@
+- hosts: localhost
+  user: root
+  vars:
+    user_home: duowei
+    # user_passwd: 
+    docker_version: 17.06.0~ce-0~ubuntu
+  pre_tasks:
+  roles:
+    - docker-elasticsearch
+    - docker-logstash
+    - docker-kibana
+  tasks:
+  post_tasks:

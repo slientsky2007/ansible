@@ -1,0 +1,26 @@
+---
+# possibly saved as sysinit/roles/docker-kibana/tasks/main.yml
+- name: check kibana
+  shell: docker ps -a|grep kibana
+  register: kibana_result
+  ignore_errors: True
+  
+- name: 拷贝docker-kibana目录结构
+  copy: src=ELK/ dest=/home/{{user_home}}/dockers/PubServer/ owner={{user_home}} group={{user_home}} mode=750
+  when: kibana_result is failed
+  
+- name: 拷贝模板kibana/kibana.yml
+  template: src=kibana/kibana.yml dest=/home/{{user_home}}/dockers/PubServer/kibana/kibana.yml owner={{user_home}} group={{user_home}} mode=750
+  when: kibana_result is failed
+  
+- name: 拷贝模板kibana/docker-compose.yml
+  template: src=kibana/docker-compose.yml dest=/home/{{user_home}}/dockers/PubServer/kibana/docker-compose.yml owner={{user_home}} group={{user_home}} mode=750
+  when: kibana_result is failed
+  
+- name: 运行容器kibana-{{host_name}}
+  become: yes
+  become_user: "{{user_home}}"
+  shell: cd /home/{{user_home}}/dockers/PubServer/kibana && docker-compose up -d
+  when: kibana_result is failed
+  
+  

@@ -1,0 +1,26 @@
+---
+# possibly saved as sysinit/roles/docker-logstash/tasks/main.yml
+- name: check logstash
+  shell: docker ps -a|grep logstash
+  register: logstash_result
+  ignore_errors: True
+  
+- name: 拷贝docker-logstash目录结构
+  copy: src=ELK/ dest=/home/{{user_home}}/dockers/PubServer/ owner={{user_home}} group={{user_home}} mode=750
+  when: logstash_result is failed
+  
+- name: 拷贝模板logstash/settings/logstash.yml
+  template: src=logstash/settings/logstash.yml dest=/home/{{user_home}}/dockers/PubServer/logstash/settings/logstash.yml owner={{user_home}} group={{user_home}} mode=750
+  when: logstash_result is failed
+  
+- name: 拷贝模板logstash/docker-compose.yml
+  template: src=logstash/docker-compose.yml dest=/home/{{user_home}}/dockers/PubServer/logstash/docker-compose.yml owner={{user_home}} group={{user_home}} mode=750
+  when: logstash_result is failed
+  
+- name: 运行容器logstash-{{host_name}}
+  become: yes
+  become_user: "{{user_home}}"
+  shell: cd /home/{{user_home}}/dockers/PubServer/logstash && docker-compose up -d
+  when: logstash_result is failed
+  
+  

@@ -1,0 +1,18 @@
+version: '2'
+services:
+  kibana:
+    image: docker.elastic.co/kibana/kibana:5.6.8
+    container_name: kibana-{{host_name}}
+    hostname: kibana-{{host_name}}
+    restart: always
+    extra_hosts:
+      - "elasticsearch:{{elasticsearch_ip}}"
+    ports:
+      - 5601:5601
+    environment:
+      - TZ=Asia/Shanghai
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    mem_limit: 1g
+    volumes:
+      - /home/{{user_home}}/dockers/PubServer/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+      - /home/{{user_home}}/dockers/PubServer/kibana/logs:/usr/share/kibana/logs

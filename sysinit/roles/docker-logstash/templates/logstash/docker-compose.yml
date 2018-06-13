@@ -1,0 +1,19 @@
+version: '2'
+services:
+  logstash:
+    image: docker.elastic.co/logstash/logstash:5.6.8
+    container_name: logstash-{{host_name}}
+    hostname: logstash-{{host_name}}
+    extra_hosts:
+      - "elasticsearch:{{elasticsearch_ip}}"
+    restart: always
+    ports:
+      - 5044:5044
+    environment:
+      - TZ=Asia/Shanghai
+      - "LS_JAVA_OPTS=-Xms512m -Xmx512m"
+    mem_limit: 1024m
+    volumes:
+      - /home/{{user_home}}/dockers/PubServer/logstash/pipeline:/usr/share/logstash/pipeline
+      - /home/{{user_home}}/dockers/PubServer/logstash/monitor-logs:/opt/logs
+      - /home/{{user_home}}/dockers/PubServer/logstash/settings:/usr/share/logstash/config

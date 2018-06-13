@@ -1,0 +1,4 @@
+---
+# possibly saved as sysinit/roles/docker-kibana/meta/main.yml
+dependencies:
+  - { role: docker }

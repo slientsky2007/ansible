@@ -1,0 +1,4 @@
+---
+# possibly saved as sysinit/roles/docker-logstash/meta/main.yml
+dependencies:
+  - { role: docker }

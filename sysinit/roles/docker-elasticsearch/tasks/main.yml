@@ -1,0 +1,26 @@
+---
+# possibly saved as sysinit/roles/docker-elasticsearch/tasks/main.yml
+- name: check elasticsearch
+  shell: docker ps -a|grep elasticsearch
+  register: elasticsearch_result
+  ignore_errors: True
+  
+- name: 拷贝docker-elasticsearch目录结构
+  copy: src=ELK/ dest=/home/{{user_home}}/dockers/PubServer/ owner={{user_home}} group={{user_home}} mode=750
+  when: elasticsearch_result is failed
+  
+- name: 拷贝模板elasticsearch/config/elasticsearch.yml
+  template: src=elasticsearch/config/elasticsearch.yml dest=/home/{{user_home}}/dockers/PubServer/elasticsearch/config/elasticsearch.yml owner={{user_home}} group={{user_home}} mode=750
+  when: elasticsearch_result is failed
+  
+- name: 拷贝模板elasticsearch/docker-compose.yml
+  template: src=elasticsearch/docker-compose.yml dest=/home/{{user_home}}/dockers/PubServer/elasticsearch/docker-compose.yml owner={{user_home}} group={{user_home}} mode=750
+  when: elasticsearch_result is failed
+  
+- name: 运行容器elasticsearch-single-{{host_name}}
+  become: yes
+  become_user: "{{user_home}}"
+  shell: cd /home/{{user_home}}/dockers/PubServer/elasticsearch && docker-compose up -d
+  when: elasticsearch_result is failed
+  
+  

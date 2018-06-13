@@ -1,0 +1,25 @@
+version: '2'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.8
+    container_name: elasticsearch-single-{{host_name}}
+    hostname: elasticsearch-single-{{host_name}}
+    restart: always
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - TZ=Asia/Shanghai
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
+    mem_limit: 3g
+    volumes:
+      - /home/{{user_home}}/dockers/PubServer/elasticsearch/config:/usr/share/elasticsearch/config
+      - /home/{{user_home}}/dockers/PubServer/elasticsearch/data:/usr/share/elasticsearch/data
+      - /home/{{user_home}}/dockers/PubServer/elasticsearch/logs:/usr/share/elasticsearch/logs
+
+#生产环境登录到容器使用root用户并执行 sysctl -w vm.max_map_count=262144
+#测试  curl http://localhost:9200/?pretty
+#查看所有索引  curl http://localhost:9200/_cat/indices?v
+#清空所有logstash的索引 curl -XDELETE 'http://localhost:9200/logstash-*'
