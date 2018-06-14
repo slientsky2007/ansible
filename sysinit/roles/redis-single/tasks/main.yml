@@ -1,0 +1,21 @@
+---
+# possibly saved as sysinit/roles/redis-single/tasks
+- name: 检查redis-server是否已安装
+  shell: redis-server -v
+  register: result
+  ignore_errors: True
+  
+- name: 新建目录/home/{{user_home}}/apps/redis-single
+  file: dest=/home/{{user_home}}/apps/redis-single state=directory owner={{user_home}} group={{user_home}}
+  
+- name: 拷贝单节点6379 配置文件
+  template: src=redis.conf.tem dest=/home/{{user_home}}/apps/redis.conf owner={{user_home}} group={{user_home}} mode=0700
+
+- name: check redis-single/6379服务是否已运行
+  shell: ps axu|grep "redis-server 0.0.0.0:6379"|grep -v 'grep'
+  register: result6379
+  ignore_errors: True
+
+- name: 启动单节点6379
+  shell: redis-server /home/{{user_home}}/apps/redis-single/redis.conf
+  when: result is succeeded and result6379 is failed

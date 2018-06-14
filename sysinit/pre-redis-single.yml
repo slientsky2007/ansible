@@ -1,0 +1,8 @@
+- hosts: mmm-pre3
+  user: root
+  vars:
+    user_home: duowei
+    pre_redis_ip: *.*.*.*
+  tasks:
+  roles:
+    - pre-redis-single

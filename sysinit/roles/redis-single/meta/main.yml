@@ -1,0 +1,4 @@
+---
+# possibly saved as pre-servers/roles/pre-redis-single/meta/main.yml
+dependencies:
+  - { role: redis }
