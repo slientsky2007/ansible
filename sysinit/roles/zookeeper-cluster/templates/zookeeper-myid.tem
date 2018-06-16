@@ -1,0 +1,3 @@
+#!/bin/bash
+
+echo $HOSTNAME |grep -Eo '[0-9]+' > /home/{{user_home}}/datas/zookeeper/data/myid

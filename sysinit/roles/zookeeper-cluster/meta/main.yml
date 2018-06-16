@@ -1,0 +1,4 @@
+---
+# possibly saved as pre-servers/roles/solr-zookeeper/meta/main.yml
+dependencies:
+  - { role: jdk8 }

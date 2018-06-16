@@ -1,0 +1,41 @@
+---
+# possibly saved as sysinit/roles/zookeeper-cluster/tasks/main.yml
+- name: 检查zookeeper是否已安装
+  shell: ls /home/{{user_home}}/apps/zookeeper-3.4.6
+  register: zookeeper_result
+  ignore_errors: True
+  
+- name: 拷贝zookeeper安装包
+  copy: src=zookeeper-3.4.6.tar.gz dest=/home/{{user_home}}/tools/ owner={{user_home}} group={{user_home}} mode=0700
+  when: zookeeper_result is failed
+  
+- name: 解压zookeeper
+  shell: cd /home/{{user_home}}/tools && tar zxvf zookeeper-3.4.6.tar.gz -C /home/{{user_home}}/apps
+  when: zookeeper_result is failed
+  
+- name: 新建文件夹/home/{{user_home}}/datas/zookeeper/data
+  file: dest=/home/{{user_home}}/datas/zookeeper/data state=directory owner={{user_home}} group={{user_home}} recurse=yes
+  
+- name: 新建文件夹/home/{{user_home}}/datas/zookeeper/logs
+  file: dest=/home/{{user_home}}/datas/zookeeper/logs state=directory owner={{user_home}} group={{user_home}} recurse=yes
+
+- name: 拷贝zoo.cfg到目录/home/{{user_home}}/apps/zookeeper-3.4.6/conf/zoo.cfg
+  template: src=zoo.cfg.tem dest=/home/{{user_home}}/apps/zookeeper-3.4.6/conf/zoo.cfg owner={{user_home}} group={{user_home}} mode=0644
+  when: zookeeper_result is failed
+  
+- name: check zookeeper服务是否已运行
+  shell: ps axu|grep "zookeeper"|grep -v 'grep'
+  register: zookeeper_server_result
+  ignore_errors: True
+
+- name: 拷贝脚本/home/{{user_home}}/tools/zookeeper-myid.sh
+  template: src=zookeeper-myid.tem dest=/home/{{user_home}}/tools/zookeeper-myid.sh owner=root group=root mode=0700
+  
+- name: 执行脚本zookeeper-myid.sh 生成/home/{{user_home}}/datas/zookeeper/data/myid
+  shell: /home/{{user_home}}/tools/zookeeper-myid.sh
+
+- name: 启动zookeeper
+  shell: source /etc/profile && /home/{{user_home}}/apps/zookeeper-3.4.6/bin/zkServer.sh restart
+  args:
+    executable: /bin/bash
+  when: zookeeper_server_result is failed
