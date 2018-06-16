@@ -1,0 +1,38 @@
+---
+# possibly saved as pre-servers/roles/redis-cluster/tasks
+- name: 检查solr是否已安装
+  shell: ls /home/{{user_home}}/apps/solr-5.4.0
+  register: solr_result
+  ignore_errors: True
+  
+- name: 检查zookeeper是否已安装
+  shell: ls /home/{{user_home}}/apps/zookeeper-3.4.6
+  register: zookeeper_result
+  ignore_errors: True
+  
+- name: 拷贝solr安装包
+  copy: src=solr-5.4.0.tgz dest=/home/{{user_home}}/tools/ owner={{user_home}} group={{user_home}} mode=0700
+  when: solr_result is failed or zookeeper_result is failed
+  
+- name: 解压solr
+  shell: cd /home/{{user_home}}/tools && tar zxvf solr-5.4.0.tgz -C /home/{{user_home}}/apps
+  when: solr_result is failed
+
+- name: 新建文件夹/home/{{user_home}}/datas/solr_home
+  file: dest=/home/{{user_home}}/datas/solr_home state=directory owner={{user_home}} group={{user_home}} recurse=yes
+  
+- name: 拷贝solr.xml到目录/home/{{user_home}}/datas/solr_home/solr.xml
+  template: src=solr.xml.tem dest=/home/{{user_home}}/datas/solr_home/solr.xml owner={{user_home}} group={{user_home}} mode=0644
+  when: solr_result is failed
+  
+# - name: check zookeeper 集群服务是否已运行
+  # shell: check_zk_cluster_status.sh {{zk_cluster_list}}
+  # register: zk_cluster_result
+  # ignore_errors: True
+
+- name: 拷贝脚本/home/{{user_home}}/tools/solr-cloud.sh
+  template: src=solr-cloud.tem dest=/home/{{user_home}}/tools/solr-cloud.sh owner=root group=root mode=0700
+
+- name: 启动solr cloud
+  shell: /home/{{user_home}}/tools/solr-cloud.sh
+  # when: zk_cluster_result is success

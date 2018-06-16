@@ -3,9 +3,7 @@
   vars:
     user_home: duowei
     # user_passwd: 
-    solr_cloud_001: *.*.*.*
-    solr_cloud_002: *.*.*.*
-    solr_cloud_003: *.*.*.*
+    zk_cluster_list: *.*.*.*:2181,*.*.*.*:2181,*.*.*.*:2181
   roles:
-    - pre-solr-zookeeper
+    - solr-cloud
   tasks:

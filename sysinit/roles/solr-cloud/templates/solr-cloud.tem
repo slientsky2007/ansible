@@ -1,0 +1,4 @@
+#!/bin/bash
+
+source /etc/profile
+/home/{{user_home}}/apps/solr-5.4.0/bin/solr restart -cloud -s /home/{{user_home}}/datas/solr_home -z {{zk_cluster_list}}

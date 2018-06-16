@@ -1,0 +1,4 @@
+---
+# possibly saved as sysinit/roles/jdk8/meta/main.yml
+dependencies:
+  - { role: system-environment }
