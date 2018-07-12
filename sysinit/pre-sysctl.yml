@@ -1,0 +1,11 @@
+- hosts: localhost
+  user: root
+  vars:
+    user_home: duowei
+    # user_passwd: 
+    system_mirror: aliyun
+  pre_tasks:
+  roles:
+    - sysctl
+  tasks:
+  post_tasks:

@@ -1,0 +1,15 @@
+---
+# possibly saved as ansible/sysinit/roles/sysctl/defaults/main.yml
+# ara_apt_packages: 
+  # - gcc 
+  # - python-dev
+  # - libffi-dev
+  # - libssl-dev
+  # - python-pip
+  # - libxml2-dev
+  # - libxslt1-dev
+
+# ara_pip_packages:
+  # - tox
+  # - ara 
+host_name: "{{ansible_hostname}}"

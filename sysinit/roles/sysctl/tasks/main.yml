@@ -1,0 +1,9 @@
+---
+# possibly saved as sysinit/roles/sysctl/tasks/main.yml
+- name: 阿里云ubuntu16.04 替换/etc/sysctl.conf
+  template: src=sysctl.conf.aliyun.tmp dest=/etc/sysctl.conf owner=root group=root mode=644
+  when: ansible_distribution == 'Ubuntu' and system_mirror == 'aliyun'
+  
+- name: 普通ubuntu16.04 替换/etc/sysctl.conf
+  template: src=sysctl.conf.tmp dest=/etc/sysctl.conf owner=root group=root mode=644
+  when: ansible_distribution == 'Ubuntu' and system_mirror == 'host'

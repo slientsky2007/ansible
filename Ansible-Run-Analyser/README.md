@@ -17,10 +17,11 @@ ara_webserver_port: 9191
 ara_webserver_ip: *.*.*.*
 ```
 
-#执行安装并每次用户登录时执行刷新环境变量
+#root用户执行安装并每次用户登录时执行刷新环境变量
 ```sh
 cd Ansible-Run-Analyser && ansible-playbook Playbook.yml
-echo 'source <(python -m ara.setup.env)' > /etc/profile
+echo 'source <(python -m ara.setup.env)' >> /etc/profile
+echo 'source /etc/profile >> ~/.bashrc'
 ```
 ------------------
 
