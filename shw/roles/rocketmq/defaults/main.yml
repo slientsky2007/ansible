@@ -1,0 +1,51 @@
+---
+# possibly saved as ansible/sysinit/roles/sysctl/defaults/main.yml
+# ara_apt_packages: 
+  # - gcc 
+  # - python-dev
+  # - libffi-dev
+  # - libssl-dev
+  # - python-pip
+  # - libxml2-dev
+  # - libxslt1-dev
+
+# ara_pip_packages:
+  # - tox
+  # - ara 
+user_run: vvic_run
+user_bi: vvic_user
+user_log: vvic_log
+
+path: /data
+log_dir: /data/logs
+software_dir: /data/softwares
+service_dir: /data/services
+tool_dir: /data/tools
+temp_dir: /data/temp
+
+appname: rocketmq
+rocketmqzip: rocketmq-all-4.2.0-bin-release.zip
+modern: 2m-noslave
+#修改为不同主机的hostname，默认为rocketmq001  rocketmq002
+hostname: rocketmq001
+#2m-noslave模式时填写broker-a  or  broker-b
+brokerName: broker-a
+brokerconfname: '{{ brokerName }}.properties'
+
+rocketmqhome: /data/softwares/rocketmq
+storePathRootDir: /data/rocketmq/store
+storePathCommitLog: /data/rocketmq/store/commitlog
+storePathConsumeQueue: /data/rocketmq/store/consumequeue
+storePathIndex: /data/rocketmq/store/index
+storeCheckpoint: /data/rocketmq/store/checkpoint
+abortFile: /data/rocketmq/store/abort
+
+rocketmq-console_home: /data/softwares/rocketmq-console
+supervisor_conf_dir: /data/softwares/supervisor/supervisord.d
+
+
+
+
+
+
+

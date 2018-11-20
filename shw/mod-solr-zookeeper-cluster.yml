@@ -1,0 +1,10 @@
+- hosts: solr001 solr002 solr003
+  user: root
+  vars:
+    zk_cluster_list:
+      - {name: 'server.1', ip: '192.168.111.XX'}
+      - {name: 'server.2', ip: '192.168.111.XX'}
+      - {name: 'server.3', ip: '192.168.111.XX'}
+  roles:
+    - zookeeper-cluster
+  tasks:

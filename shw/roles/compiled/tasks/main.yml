@@ -1,0 +1,95 @@
+---
+# possibly saved as sysinit/roles/compiled/tasks/main.yml
+- name: Ubuntu 安装编译环境
+  apt: name={{item}} state=present update_cache=yes
+  with_items:
+    - telnet
+    - git
+    - nano
+    - gcc
+    - automake
+    - autoconf
+    - libtool
+    - make
+    - libssl-dev
+    - g++
+    - build-essential
+    - unzip
+    - cronolog
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: CentOS 更新包
+  shell: yum update -y && yum upgrade -y
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  
+- name: CentOS 安装编译环境
+  yum: name={{item}} state=present update_cache=yes
+  with_items:
+    - telnet
+    - git
+    - nano
+    - gcc
+    - automake
+    - autoconf
+    - libtool
+    - make
+    - gcc-c++
+    - unzip
+    - cronolog
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+# - name: Ubuntu安装gcc
+  # apt: name=gcc state=present update_cache=yes
+  # when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  
+# - name: Ubuntu安装automake
+  # apt: name=automake state=present update_cache=yes
+  # when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  
+# - name: Ubuntu安装autoconf
+  # apt: name=autoconf state=present update_cache=yes
+  # when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+# - name: Ubuntu安装libtool
+  # apt: name=libtool state=present update_cache=yes
+  # when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+# - name: Ubuntu安装make
+  # apt: name=make state=present update_cache=yes
+  # when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  
+# - name: Ubuntu安装libssl-dev
+  # apt: name=libssl-dev state=present update_cache=yes
+  # when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+# - name: Ubuntu安装g++
+  # apt: name=g++ state=present update_cache=yes
+  # when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+# - name: Ubuntu安装build-essential
+  # apt: name=build-essential state=present update_cache=yes
+  # when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+# - name: CentOS安装gcc
+  # yum: name=gcc state=present update_cache=yes
+  # when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  
+# - name: CentOS安装automake
+  # yum: name=automake state=present update_cache=yes
+  # when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  
+# - name: CentOS安装autoconf
+  # yum: name=autoconf state=present update_cache=yes
+  # when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+# - name: CentOS安装libtool
+  # yum: name=libtool state=present update_cache=yes
+  # when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+# - name: CentOS安装make
+  # yum: name=make state=present update_cache=yes
+  # when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+# - name: CentOS安装gcc-c++
+  # yum: name=gcc-c++ state=present update_cache=yes
+  # when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'

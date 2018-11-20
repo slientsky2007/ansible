@@ -1,0 +1,53 @@
+---
+# possibly saved as sysinit/roles/zookeeper-cluster/tasks/main.yml
+- name: 检查zookeeper是否已安装
+  shell: ls {{software_dir}}/zookeeper-3.4.6
+  register: zookeeper_result
+  ignore_errors: True
+  
+- name: 拷贝zookeeper安装包
+  copy: src=zookeeper-3.4.6.tar.gz dest={{tool_dir}} owner={{user_run}} group={{user_run}} mode=0700
+  when: zookeeper_result is failed
+  
+- name: 解压zookeeper
+  shell: cd {{tool_dir}} && tar zxvf zookeeper-3.4.6.tar.gz -C {{software_dir}}
+  when: zookeeper_result is failed
+  
+- name: 新建文件夹{{zookeeper_data_dir}}
+  file: dest={{zookeeper_data_dir}} state=directory owner={{user_run}} group={{user_run}} recurse=yes
+  
+- name: 新建文件夹{{zookeeper_log_dir}}
+  file: dest={{zookeeper_log_dir}} state=directory owner={{user_run}} group={{user_run}} recurse=yes
+  
+- name: 拷贝zoo.cfg到目录{{software_dir}}/zookeeper-3.4.6/conf/zoo.cfg
+  template: src=zoo.cfg.tem dest={{software_dir}}/zookeeper-3.4.6/conf/zoo.cfg owner={{user_run}} group={{user_run}} mode=0644
+  when: zookeeper_result is failed
+  
+- name: 根据zk_cluster列表处理配置文件{{software_dir}}/zookeeper-3.4.6/conf/zoo.cfg
+  shell: sed -i '/# zk_cluster_list/a\{{item.name}}={{item.ip}}:2888:3888' {{software_dir}}/zookeeper-3.4.6/conf/zoo.cfg
+  with_items: "{{zk_cluster_list}}"
+  
+- name: check zookeeper服务是否已运行
+  shell: ps axu|grep "zookeeper"|grep -v 'grep'
+  register: zookeeper_server_result
+  ignore_errors: True
+
+- name: 拷贝脚本{{tool_dir}}/zookeeper-myid.sh
+  template: src=zookeeper-myid.tem dest={{tool_dir}}/zookeeper-myid.sh owner=root group=root mode=0700
+  
+- name: 执行脚本zookeeper-myid.sh 生成{{zookeeper_data_dir}}/myid
+  shell: sh {{tool_dir}}/zookeeper-myid.sh
+
+- name: 拷贝系统服务配置文件
+  template: src=appname.service.mod dest=/usr/lib/systemd/system/zookeeper.service owner=root group=root mode=0750
+
+- name: 启动zookeeper
+  shell: systemctl daemon-reload && systemctl start zookeeper.service
+  
+# - name: 启动zookeeper
+  # shell: {{software_dir}}/zookeeper-3.4.6/bin/restart-zookeeper.sh
+  # args:
+    # executable: /bin/bash
+  # remote_user: vvic_run
+  # sudo: yes
+  # when: zookeeper_server_result is failed

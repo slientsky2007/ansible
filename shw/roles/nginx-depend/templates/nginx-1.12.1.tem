@@ -1,0 +1,23 @@
+#!/bin/bash
+
+cd /home/{{user_home}}/tools/nginx-1.12.1/
+./configure \
+--prefix=/home/{{user_home}}/apps/nginx \
+--with-stream \
+--with-http_ssl_module \
+--with-http_realip_module \
+--with-http_gzip_static_module \
+--with-http_stub_status_module \
+--add-module=/home/{{user_home}}/tools/nginx-http-concat \
+--add-module=/home/{{user_home}}/tools/ngx_devel_kit-0.3.0 \
+--with-pcre=/home/{{user_home}}/apps/pcre-8.38 \
+--with-zlib=/home/{{user_home}}/apps/zlib-1.2.8 \
+--with-openssl=/home/{{user_home}}/apps/openssl-1.0.1t \
+--http-proxy-temp-path=/home/{{user_home}}/apps/nginx/proxy_temp \
+--http-fastcgi-temp-path=/home/{{user_home}}/apps/nginx/fastcgi_temp  \
+--http-uwsgi-temp-path=/home/{{user_home}}/apps/nginx/uwsgi_temp \
+--http-scgi-temp-path=/home/{{user_home}}/apps/nginx/cgi_temp \
+--http-client-body-temp-path=/home/{{user_home}}/apps/nginx/client_body_temp \
+--http-log-path=/home/{{user_home}}/apps/nginx/logs/access.log \
+--error-log-path=/home/{{user_home}}/apps/nginx/logs/error.log \
+&& make && make install

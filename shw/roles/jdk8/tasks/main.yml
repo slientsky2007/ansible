@@ -1,0 +1,53 @@
+---
+# possibly saved as sysinit/roles/jdk8/tasks/main.yml
+- name: 初始化环境变量
+  shell: source /etc/profile
+
+- name: check jdk8
+  shell: /usr/local/java/bin/java -version
+  register: jdk8_result
+  ignore_errors: True
+
+- name: check JAVA_HOME
+  shell: cat /etc/profile | grep JAVA_HOME
+  register: JAVA_HOME_result
+  ignore_errors: True
+
+- name: copy jdk包
+  copy: src=jdk-8u112-linux-x64.tar.gz dest={{tool_dir}}/ owner={{user_run}} group={{user_run}} mode=700
+  when: jdk8_result is failed
+
+- name: 解压压缩包到指定目录/usr/local
+  shell: cd {{tool_dir}} && tar zxvf {{jdk_gz}} -C /usr/local
+  # when: jdk8_result is failed
+  
+# - name: 修改{{jdk_dir}}/jre/lib/security/java.security
+  # template: src=java.security dest={{jdk_dir}}/jre/lib/security/java.security owner={{user_run}} group={{user_run}} mode=0644
+  # when: jdk8_result is failed
+  
+- name: 修改{{jdk_dir}}所有者
+  shell: chown -Rf {{user_run}}:{{user_run}} {{jdk_dir}}
+  # when: jdk8_result is failed
+  
+- name: del软链接或同名目录
+  shell: rm -rf {{ln_jdk_dir}}
+  
+- name: 建软链接
+  shell: ln -s {{jdk_dir}} {{ln_jdk_dir}}
+
+- name: 清除环境变量JAVA_HOME
+  shell: sed -i '/export JAVA_HOME=/d' /etc/profile && sed -i '/export PATH=${JAVA_HOME}/d' /etc/profile
+  when: JAVA_HOME_result | succeeded
+  
+- name: 添加环境变量JAVA_HOME
+  shell: echo 'export JAVA_HOME={{jdk_dir}}' >> /etc/profile && echo 'export PATH=${JAVA_HOME}/bin:$PATH' >> /etc/profile
+  # when: JAVA_HOME_result is failed
+
+- name: 环境变量立即生效
+  sudo: no
+  shell: source /etc/profile
+  args:
+    executable: /bin/bash
+#  when: JAVA_HOME_result is failed
+
+

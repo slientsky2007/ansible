@@ -1,0 +1,11 @@
+---
+# possibly saved as sysinit/roles/nfs-client/tasks/main.yml
+- name: Ubuntu安装nfs客户端
+  apt: name=nfs-common state=present update_cache=yes
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: CentOS安装nfs客户端
+  yum: name={{item}} state=present update_cache=yes
+  with_items:
+    - nfs-utils
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'

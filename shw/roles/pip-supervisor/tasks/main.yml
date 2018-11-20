@@ -1,0 +1,42 @@
+---
+# possibly saved as sysinit/roles/pip-supervisor/tasks/main.yml
+- name: pip安装supervisor
+  shell: pip install -U supervisor
+
+- name: 新建目录 {{supervisor_software_dir}}
+  file: dest={{supervisor_software_dir}} state=directory mode=0750  owner={{user_run}} group={{user_run}}
+
+- name: 新建目录 {{supervisor_log_dir}}
+  file: dest={{supervisor_log_dir}} state=directory mode=0750  owner={{user_run}} group={{user_run}}
+
+- name: 新建目录 {{supervisor_software_dir}}/supervisord.d
+  file: dest={{supervisor_software_dir}}/supervisord.d state=directory mode=0750  owner={{user_run}} group={{user_run}}
+
+- name: 拷贝配置文件
+  template: src=supervisord.conf.mod dest=/etc/supervisord.conf owner=root group=root mode=750
+
+- name: del 原目录下的{{supervisor_software_dir}}/supervisord.conf
+  file: dest={{supervisor_software_dir}}/supervisord.conf state=absent
+
+- name: check supervisor
+  shell: ps axu |grep supervisord |grep -v 'grep\|restart'
+  register: supervisord_result
+  ignore_errors: True
+
+- name: 如果supervisor正在运行，则杀掉
+  shell: ps aux|grep "supervisord"|grep -v 'grep\|restart'|awk '{print $2}'|xargs kill -9
+  when: supervisord_result is succeeded
+
+- name: 拷贝文件{{systemctl_app_conf_dir}}
+  template: src=supervisor.service.mod dest={{systemctl_app_conf_dir}} owner={{user_run}} group={{user_run}} mode=0644
+  
+- name: 重新加载systemctl配置
+  shell: systemctl daemon-reload
+  
+- name: 设置supervisor 开机启动
+  shell: systemctl enable {{appname}}
+  
+- name: 运行supervisor
+  shell: systemctl start supervisor
+  
+

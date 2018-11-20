@@ -1,0 +1,6 @@
+- hosts: solr001 solr002 solr003
+  user: root
+  vars:
+    zk_cluster_list: 192.168.111.XX:2181,192.168.111.XX:2181,192.168.111.XX:2181
+  roles:
+    - solr-cloud

@@ -1,0 +1,30 @@
+---
+# possibly saved as ansible/sysinit/roles/sysctl/defaults/main.yml
+# ara_apt_packages: 
+  # - gcc 
+  # - python-dev
+  # - libffi-dev
+  # - libssl-dev
+  # - python-pip
+  # - libxml2-dev
+  # - libxslt1-dev
+
+# ara_pip_packages:
+  # - tox
+  # - ara 
+user_run: vvic_run
+user_bi: vvic_user
+user_log: vvic_log
+
+path: /data
+log_dir: /data/logs
+software_dir: /data/softwares
+service_dir: /data/services
+tool_dir: /data/tools
+
+
+jdk_url: http://47.98.248.12:8557/install/jdk-8u112-linux-x64.tar.gz
+jdk_gz: jdk-8u112-linux-x64.tar.gz
+jdk_dir: /usr/local/jdk1.8.0_112
+ln_jdk_dir: /usr/local/java
+

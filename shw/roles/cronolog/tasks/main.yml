@@ -1,0 +1,10 @@
+---
+# possibly saved as sysinit/roles/nfs-client/tasks/main.yml
+- name: Ubuntu安装cronolog
+  apt: name=cronolog state=present update_cache=yes
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: CentOS安装cronolog
+  yum: name=cronolog state=present update_cache=yes
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+

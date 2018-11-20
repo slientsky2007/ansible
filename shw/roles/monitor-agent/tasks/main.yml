@@ -1,0 +1,22 @@
+# possibly saved as sysinit/roles/jdk8/tasks/main.yml
+
+- name: 下载软件到software
+  shell: wget {{agent_url}} -P {{tool_path}}
+
+- name: 清空原有目录
+  shell: rm -rf /data/monitor-agent
+
+- name: 解压压缩包到指定目录/data
+  shell: cd {{tool_path}} && tar zxvf {{agent_gz}} -C {{init_path}}
+
+- name: 解压压缩包到指定目录/data
+  shell: cd {{tool_path}} && rm -f {{agent_gz}}
+
+- name: 下载supervisor配置文件到指定目录
+  shell: wget {{ini_url}} -P {{ini_path}}
+
+- name: 修改{{tool_path}}所有者
+  file: dest={{tool_path}} state=directory owner={{user_run}} group={{user_run}} recurse=yes
+
+- name: 启动服务
+  shell: supervisorctl update && supervisorctl start monitor-agent

@@ -1,0 +1,22 @@
+
+- hosts: localhost
+  user: root
+  vars:
+  tasks:
+  roles:
+    - mount-vdb1
+    - user-test
+    - dir
+    - cron-ntpdate
+    - lrzsz
+    - compiled
+    - nginx-depend
+    - nfs-client
+    - pip-supervisor
+    - jdk8
+#    - dns
+#    - monitor-agent
+#    - tomcat8
+#    - ssh
+#    - sysctl
+#    - system-environment

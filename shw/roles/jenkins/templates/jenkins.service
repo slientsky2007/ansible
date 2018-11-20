@@ -1,0 +1,9 @@
+[Unit]
+Description=Jenkins Daemon
+
+[Service]
+ExecStart=/data/services/startjenkins.sh
+User=root
+
+[Install]
+WantedBy=multi-user.target

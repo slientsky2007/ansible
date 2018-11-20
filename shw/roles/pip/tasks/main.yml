@@ -1,0 +1,49 @@
+---
+# possibly saved as sysinit/roles/pip/tasks/main.yml
+- name: check ~/temps
+  shell: ls ~/temps
+  register: dir_result
+  ignore_errors: True
+
+- name: Ubuntu安装python2.7
+  apt: name=python state=present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: CentOS安装python2.7
+  yum: name=python state=present
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'  
+
+- name: 如果Ubuntu系统默认安装了python-pip,先卸载
+  apt: name=python-pip state=absent
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: 如果CentOS系统默认安装了python-pip,先卸载
+  yum: name=python-pip state=absent
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: Ubuntu安装python-apt
+  apt: name=python-apt state=present
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: CentOS安装python-apt
+  yum: name=python-apt state=present
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  
+- name: 新建目录~/temps
+  file: dest=~/temps state=directory
+  when: dir_result is failed
+
+- name: 拷贝get-pip.py
+  copy: src=get-pip.py dest=~/temps/ mode=0700 owner=root group=root
+  
+- name: 执行安装
+  shell: python ~/temps/get-pip.py
+  
+- name: check pip
+  shell: pip --version
+  register: pip_result
+  ignore_errors: True
+  
+- name: check ~/temps
+  shell: ln -s /usr/local/bin/pip /usr/bin/pip
+  when: pip_result is failed

@@ -1,0 +1,53 @@
+---
+# possibly saved as sysinit/roles/nginx-1.12.1/tasks/main.yml
+
+- name: 拷贝所有安装包
+  copy: src=depend/ dest={{tool_dir}}/ owner={{user_run}} group={{user_run}} mode=700
+
+- name: check openssl-1.0.1t
+  shell: ls {{software_dir}}/openssl-1.0.1t
+  register: openssl_result
+  ignore_errors: True
+  
+- name: 解压安装包openssl-1.0.1t.tar.gz
+  shell: cd {{tool_dir}} && tar -xvf openssl-1.0.1t.tar.gz -C {{software_dir}}
+  when: openssl_result is failed
+
+- name: check pcre-8.39
+  shell: ls {{software_dir}}/pcre-8.39
+  register: pcre_result
+  ignore_errors: True
+  
+- name: 解压安装包pcre-8.39.tar.gz
+  shell: cd {{tool_dir}} && tar -xvf pcre-8.39.tar.gz -C {{software_dir}}
+  when: pcre_result is failed
+  
+- name: check zlib-1.2.8
+  shell: ls {{software_dir}}/zlib-1.2.8
+  register: zlib_result
+  ignore_errors: True
+  
+- name: 解压安装包zlib-1.2.8.tar.gz
+  shell: cd {{tool_dir}} && tar -xvf zlib-1.2.8.tar.gz -C {{software_dir}}
+  when: zlib_result is failed
+
+- name: 编译nginx模块openssl-1.0.1t
+  shell: cd {{software_dir}}/openssl-1.0.1t && ./config && make && make install
+  when: openssl_result is failed
+  
+- name: 编译nginx模块zlib-1.2.8
+  shell: cd {{software_dir}}/zlib-1.2.8 && ./configure && make && make install
+  when: zlib_result is failed
+  
+- name: 编译nginx模块pcre-8.39
+  shell: cd {{software_dir}}/pcre-8.39 && ./configure && make && make install
+  when: pcre_result is failed
+  
+- name: 修改openssl-1.0.1t属主
+  file: dest={{software_dir}}/openssl-1.0.1t state=directory owner={{user_run}} group={{user_run}} recurse=yes
+
+- name: 修改zlib-1.2.8属主
+  file: dest={{software_dir}}/zlib-1.2.8 state=directory owner={{user_run}} group={{user_run}} recurse=yes
+
+- name: 修改pcre-8.39属主
+  file: dest={{software_dir}}/pcre-8.39 state=directory owner={{user_run}} group={{user_run}} recurse=yes

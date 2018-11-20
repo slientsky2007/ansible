@@ -1,0 +1,39 @@
+---
+# possibly saved as sysinit/roles/user/tasks/main.yml
+
+- name: del /data/lost+found
+  shell: rm -rf /data/lost+found
+
+- name: mkdir {{log_dir}}
+  file: dest={{log_dir}} state=directory mode=0755  owner={{user_run}} group={{user_run}}
+
+- name: mkdir {{software_dir}}
+  file: dest={{software_dir}} state=directory mode=0750  owner={{user_run}} group={{user_run}}
+
+- name: mkdir {{service_dir}}
+  file: dest={{service_dir}} state=directory mode=0750  owner={{user_run}} group={{user_run}}
+  
+- name: mkdir {{tool_dir}}
+  file: dest={{tool_dir}} state=directory mode=0750  owner={{user_run}} group={{user_run}}
+  
+- name: mkdir {{temp_dir}}
+  file: dest={{temp_dir}} state=directory mode=0750  owner={{user_run}} group={{user_run}}
+  
+- name: mkdir {{vvic_dir}}
+  file: dest={{vvic_dir}} state=directory mode=0750  owner={{user_run}} group={{user_run}}
+  
+- name: mkdir {{script_dir}}
+  file: dest={{script_dir}} state=directory mode=0750  owner={{user_run}} group={{user_run}}
+  
+- name: mkdir {{cache_dir}}
+  file: dest={{cache_dir}} state=directory mode=0750  owner={{user_run}} group={{user_run}}
+  
+- name: mkdir {{version_dir}}
+  file: dest={{version_dir}} state=directory mode=0770  owner={{user_bi}} group={{user_bi}}
+  
+- name: mkdir {{version_bk_dir}}
+  file: dest={{version_bk_dir}} state=directory mode=0770  owner={{user_bi}} group={{user_bi}}
+  
+- name: mkdir {{version_new_dir}}
+  file: dest={{version_new_dir}} state=directory mode=0770  owner={{user_bi}} group={{user_bi}}
+

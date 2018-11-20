@@ -1,0 +1,88 @@
+---
+# possibly saved as sysinit/roles/rocketmq-cluster/tasks/main.yml
+- name: 检查rocketmq是否已安装
+  shell: ls {{rocketmqhome}}
+  register: rocketmq_rusult
+  ignore_errors: True
+  
+- name: 拷贝rocketmq安装包
+  copy: src=rocketmq-all-4.2.0-bin-release.zip dest={{tool_dir}} owner={{user_run}} group={{user_run}} mode=0700
+  when: rocketmq_rusult is failed
+  
+- name: 安装unzip
+  yum: name=unzip state=present update_cache=yes
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  
+- name: 安装unzip
+  apt: name=unzip state=present update_cache=yes
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  
+- name: 新建文件夹{{rocketmqhome}}
+  file: dest={{rocketmqhome}} state=directory owner={{user_run}} group={{user_run}} recurse=yes
+
+- name: 新建文件夹{{storePathRootDir}}
+  file: dest={{storePathRootDir}} state=directory owner={{user_run}} group={{user_run}} recurse=yes
+  
+- name: 新建文件夹{{storePathCommitLog}}
+  file: dest={{storePathCommitLog}} state=directory owner={{user_run}} group={{user_run}} recurse=yes
+
+- name: 新建文件夹{{storePathConsumeQueue}}
+  file: dest={{storePathConsumeQueue}} state=directory owner={{user_run}} group={{user_run}} recurse=yes
+  
+- name: 新建文件夹{{storePathIndex}}
+  file: dest={{storePathIndex}} state=directory owner={{user_run}} group={{user_run}} recurse=yes
+  
+- name: 新建文件夹{{storeCheckpoint}}
+  file: dest={{storeCheckpoint}} state=directory owner={{user_run}} group={{user_run}} recurse=yes
+
+- name: 新建文件夹{{abortFile}}
+  file: dest={{abortFile}} state=directory owner={{user_run}} group={{user_run}} recurse=yes
+  
+- name: 解压rocketmq安装包
+  shell: cp {{tool_dir}}/{{rocketmqzip}} {{rocketmqhome}} && cd {{rocketmqhome}} && unzip {{rocketmqzip}}
+  when: rocketmq_rusult is failed
+
+- name: del rocketmq安装包
+  file: dest={{rocketmqhome}}/{{rocketmqzip}} state=absent
+  when: rocketmq_rusult is failed
+
+- name: 拷贝配置文件到到目录{{rocketmqhome}}/conf
+  template: src={{modern}}/broker-aorb.properties dest={{rocketmqhome}}/conf/{{brokerconfname}} owner={{user_run}} group={{user_run}} mode=0644
+  when: rocketmq_rusult is failed
+  
+- name: 拷贝启动文件到目录{{rocketmqhome}}/bin
+  template: src=startup.sh dest={{rocketmqhome}}/bin/startup.sh owner={{user_run}} group={{user_run}} mode=0700
+  when: rocketmq_rusult is failed
+  
+- name: 拷贝关闭文件到目录{{rocketmqhome}}/bin
+  template: src=shutdown.sh dest={{rocketmqhome}}/bin/shutdown.sh owner={{user_run}} group={{user_run}} mode=0700
+  when: rocketmq_rusult is failed
+  
+- name: rocketmq集群需添加hosts解析
+  shell: echo '{{item.ip}}   {{item.name}}' >> /etc/hosts
+  with_items: "{{rocketmq_list}}" 
+
+- name: check rocketmq服务是否已运行
+  shell: ps axu|grep "mqbroker"|grep -v 'grep'
+  register: rocketmq_server_result
+  ignore_errors: True
+
+- name: 启动rocketmq
+  shell: {{rocketmqhome}}/bin/startup.sh
+  args:
+    executable: /bin/bash
+  remote_user: root
+  sudo: yes
+  when: rocketmq_server_result is failed
+
+- name: 新建目录{{console_home}}
+  file: dest={{console_home}} state=directory owner={{user_run}} group={{user_run}} recurse=yes
+
+- name: 拷贝rocketmq-console
+  copy: src=rocketmq-console-ng-1.0.0.jar dest={{console_home}} owner={{user_run}} group={{user_run}} mode=0700
+
+- name: 拷贝supervisor启动文件
+  template: src=rocketmq-console.ini dest={{supervisor_conf_dir}}/rocketmq-console.ini owner={{user_run}} group={{user_run}} mode=0700
+
+- name: 启动rocketmq-console
+  shell: supervisorctl update rocketmq-console.ini && supervisorctl restart rocketmq-console.ini

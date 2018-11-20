@@ -1,0 +1,75 @@
+---
+# possibly saved as sysinit/roles/DNS/tasks/main.yml
+- name: check /etc/resolvconf/resolv.conf.d/base
+  shell: ls /etc/resolvconf/resolv.conf.d/base
+  register: base_result
+  ignore_errors: True
+  when: ansible_distribution == 'Ubuntu'
+
+- name: 拷贝base文件
+  template: src=base.tem dest=/etc/resolvconf/resolv.conf.d/base mode=0644 owner=root group=root
+  when: base_result is failed and ansible_distribution == 'Ubuntu'
+  
+- name: 检查/etc/resolvconf/resolv.conf.d/base是否已插入nameserver {{dnsserver_ip}}
+  shell: cat /etc/resolvconf/resolv.conf.d/base |grep 'nameserver {{dnsserver_ip}}'
+  register: check_ubuntu_nameserver
+  ignore_errors: True
+  when: ansible_distribution == 'Ubuntu'
+
+- name: 检查到未插入nameserver {{dnsserver_ip}}时执行
+  shell: echo 'nameserver {{dnsserver_ip}}' >> /etc/resolvconf/resolv.conf.d/base
+  when: ansible_distribution == 'Ubuntu' and check_ubuntu_nameserver is failed
+  
+- name: 加载新nameserver
+  shell: resolvconf -u
+  when: ansible_distribution == 'Ubuntu'
+  
+- name: 拷贝开机执行文件到/home/{{user_home}}/tasks/ubuntu16-dns-init.sh
+  template: src=ubuntu16-dns-init.tem dest=/home/{{user_home}}/tasks/ubuntu16-dns-init.sh mode=0700 owner=root group=root
+  when: ansible_distribution == 'Ubuntu'
+
+- name: 执行dns初始化脚本
+  shell: /home/{{user_home}}/tasks/dns-init.sh
+  when: ansible_distribution == 'Ubuntu'
+
+- name: 检查是否已插入/home/{{user_home}}/tasks/ubuntu16-dns-init.sh 到开机启动rc.local
+  shell: cat /etc/rc.local |grep '/home/{{user_home}}/tasks/ubuntu16-dns-init.sh'
+  register: check_ubuntu_dns_init
+  ignore_errors: True
+  when: ansible_distribution == 'Ubuntu'
+  
+- name: 如果没有插入开机启动项/etc/rc.local则执行
+  shell: sed -i '/exit 0/i\/home/{{user_home}}/tasks/dns-init.sh' /etc/rc.local
+  when: check_ubuntu_dns_init is failed and ansible_distribution == 'Ubuntu'
+  
+- name: 先备份 /etc/resolv.conf_bk
+  shell: cp /etc/resolv.conf /etc/resolv.conf_bk
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+ 
+- name: CentOS修改/etc/resolv.conf
+  shell: echo "nameserver {{dnsserver_ip}}" > /etc/resolv.conf
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  
+- name: 检查是否已插入dns=none 到 /etc/NetworkManager/NetworkManager.conf
+  shell: cat /etc/NetworkManager/NetworkManager.conf |grep 'dns=none'
+  register: check_centos_NetworkManager_conf
+  ignore_errors: True
+  when: ansible_distribution == 'CentOS'
+  
+- name: CentOS 修改 /etc/NetworkManager/NetworkManager.conf
+  shell: sed -i '/\[main\]/a\dns=none' /etc/NetworkManager/NetworkManager.conf
+  when: ansible_distribution == 'CentOS' and check_centos_NetworkManager_conf is failed
+  
+- name: CentOS NetworkManager重新加载
+  shell: systemctl restart NetworkManager.service
+  when: ansible_distribution == 'CentOS'
+
+- name: 检查是否已添加dns
+  shell: cat {{ifcfg_conf}} |grep '{{dns_config}}'
+  register: check_centos_dns
+  ignore_errors: True
+  when: ansible_distribution == 'CentOS'
+  
+- name: CentOS 修改网络配置文件
+  shell: sed -i '/ONBOOT=yes/a\{{dns_config}}' /etc/sysconfig/network-scripts/ifcfg-eth0
+  when: ansible_distribution == 'CentOS' and check_centos_dns is failed

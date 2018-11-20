@@ -1,0 +1,24 @@
+---
+# possibly saved as ansible/sysinit/roles/sysctl/defaults/main.yml
+# ara_apt_packages: 
+  # - gcc 
+  # - python-dev
+  # - libffi-dev
+  # - libssl-dev
+  # - python-pip
+  # - libxml2-dev
+  # - libxslt1-dev
+
+# ara_pip_packages:
+  # - tox
+  # - ara 
+user_root: root
+user_run: vvic_run
+
+filename: libtcnative-1.2.10
+libname: libtcnative
+
+init_path: /data/softwares
+agent_url: http://192.168.201.148:8557/lib/libtcnative-1.2.10.tar.gz
+agent_gz: libtcnative-1.2.10.tar.gz
+

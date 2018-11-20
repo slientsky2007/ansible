@@ -1,0 +1,16 @@
+# possibly saved as sysinit/roles/jdk8/tasks/main.yml
+
+- name: 下载软件到software
+  shell: wget {{agent_url}} -P {{init_path}}
+
+- name: 解压压缩包到指定目录/data/software
+  shell: cd {{init_path}} && tar zxvf {{agent_gz}} -C {{init_path}}
+
+- name: 增加软连接
+  shell: cd {{init_path}} && ln -sf {{filename}}  {{libname}} 
+
+- name: 删除压缩包
+  shell: cd {{init_path}} && rm -f {{agent_gz}}
+
+- name: 修改{{init_path}}所有者
+  file: dest={{init_path}} state=directory owner={{user_run}} group={{user_run}} recurse=yes

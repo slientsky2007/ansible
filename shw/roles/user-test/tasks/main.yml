@@ -1,0 +1,28 @@
+---
+# possibly saved as sysinit/roles/user/tasks/main.yml
+- name: check_user {{user_run}}
+  shell: id -u {{user_run}}
+  register: user_run_result
+  ignore_errors: True
+  
+- name: check_user {{user_bi}}
+  shell: id -u {{user_bi}}
+  register: user_bi_result
+  ignore_errors: True
+  
+- name: check_user {{user_log}}
+  shell: id -u {{user_log}}
+  register: user_log_result
+  ignore_errors: True
+
+- name: 新建用户{{user_run}}
+  user: name={{user_run}} password={{user_run_passwd}} shell=/bin/bash uid=1000 home=/home/{{user_run}} update_password=always
+  when: user_run_result is failed
+  
+- name: 新建用户{{user_bi}}
+  user: name={{user_bi}} password={{user_bi_passwd}} shell=/bin/bash uid=1001 home=/home/{{user_bi}} update_password=always
+  when: user_bi_result is failed
+
+- name: 新建用户{{user_log}}
+  user: name={{user_log}} password={{user_log_passwd}} shell=/bin/bash uid=1002 home=/home/{{user_log}} update_password=always
+  when: user_log_result is failed

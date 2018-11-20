@@ -1,0 +1,22 @@
+---
+# possibly saved as sysinit/roles/nfs-client/tasks/main.yml
+
+- name: 检查是否已挂载数据盘vdb1
+  shell: df -h |grep /data
+  register: vdb1_result
+  ignore_errors: True
+
+- name: 数据盘初始化
+  script: ~/ansible/vvic/roles/mount-vdb1/files/auto_fdisk.sh
+  
+- name: 新建挂载目录{{path}}
+  file: dest={{path}} state=directory mode=0754
+  when: vdb1_result is failed
+  
+- name: CentOS 挂载数据盘
+  shell: mount -t ext4 /dev/vdb1 /data
+  when: vdb1_result is failed
+  
+- name: 修改文件 CentOS 开机自动挂载数据盘
+  shell: echo "/dev/vdb1               /data         ext4    defaults        0 0" >> /etc/fstab
+  when: vdb1_result is failed
