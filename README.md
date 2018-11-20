@@ -3,7 +3,7 @@
 ```sh
 .
 ├── Ansible-Run-Analyser    #ARA 记录及查看ansible-playbook 执行过的清单
-├── shw						#分组第二个的业务模块
+├── shw                     #分组第二个的业务模块
 ├── sysinit                 #分组第一个业务模块（环境安装-默认Ubuntu16）
 │?? └── site.yml            #默认的编排文件 ansible-playbook site.yml
 │?? └── ***.yml             #其它编排的任务清单
