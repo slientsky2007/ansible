@@ -1,0 +1,20 @@
+---
+# possibly saved as ansible/sysinit/roles/sysctl/defaults/main.yml
+# ara_apt_packages: 
+  # - gcc 
+  # - python-dev
+  # - libffi-dev
+  # - libssl-dev
+  # - python-pip
+  # - libxml2-dev
+  # - libxslt1-dev
+
+# ara_pip_packages:
+  # - tox
+  # - ara 
+user_run: user_run
+user_run_passwd: $6$rounds=656000$W57CNIvBVw.E0VRD$SyxFwi2/OQHJPnaUWUyc.xrFc11pv0TPOR23TaesxA5yKYVPHrQ8ypw3HU9.eLaefla3T5rigC7N.nsoysERsE1/
+user_bi: user_user
+user_bi_passwd: $6$rounds=656000$yV2H4xMjn395H6/0$exzoFW5j.hd0.omrA5URb6R31oDAccdqPdqis7ym6Wn.HxrD568aEfCCtboAlHXWz4#fdZLkr8xa6LvDhj3zNV2.
+user_log: user_log
+user_log_passwd: $6$rounds=656000$fkx1M1umDWh6l547$fDnPKlU6T8ElKC4kUKhGBrrB1cKcZ6xgX6Xo8eEqx.8jAGyCtVA9CXAaO45Gpbx2kHX4FHekzLkSJqVVE1.YKWR/
