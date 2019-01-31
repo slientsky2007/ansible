@@ -1,0 +1,44 @@
+---
+# possibly saved as ansible/sysinit/roles/sysctl/defaults/main.yml
+# ara_apt_packages: 
+  # - gcc 
+  # - python-dev
+  # - libffi-dev
+  # - libssl-dev
+  # - python-pip
+  # - libxml2-dev
+  # - libxslt1-dev
+
+# ara_pip_packages:
+  # - tox
+  # - ara 
+user_run: vvic_run
+user_bi: vvic_user
+user_log: vvic_log
+user_user: vvic_user
+
+path: /data
+log_dir: /data/logs
+software_dir: /data/softwares
+service_dir: /data/services
+tool_dir: /data/tools
+temp_dir: /data/temp
+vvic_dir: /data/vvic
+script_dir: /data/scripts
+cache_dir: /data/cache
+version_dir: /data/Version
+version_bk_dir: /data/Version/bakversion
+version_new_dir: /data/Version/newversion
+
+k8s_yaml_dir: /data/k8s-yaml/prerelease
+
+node: '{{node}}'
+action: '{{action}}'
+
+node_name: 'pre_k8s_node_0{{ node }}'
+
+pre_k8s_node_01: cn-hangzhou.i-bp10ghfrae5kx9sjse
+pre_k8s_node_02: cn-hangzhou.i-bp10ghfrae5kx9sjse
+pre_k8s_node_03: cn-hangzhou.i-bp10ghfrae5kx9sjse
+pre_k8s_node_04: cn-hangzhou.i-bp10ghfrae5kx9sjse
+pre_k8s_node_05: cn-hangzhou.i-bp10ghfrae5kx9sjse

@@ -1,0 +1,60 @@
+---
+# possibly saved as ansible/sysinit/roles/sysctl/defaults/main.yml
+# ara_apt_packages: 
+  # - gcc 
+  # - python-dev
+  # - libffi-dev
+  # - libssl-dev
+  # - python-pip
+  # - libxml2-dev
+  # - libxslt1-dev
+
+# ara_pip_packages:
+  # - tox
+  # - ara 
+user_run: vvic_run
+user_bi: vvic_user
+user_log: vvic_log
+user_user: vvic_user
+
+path: /data
+log_dir: /data/logs
+software_dir: /data/softwares
+service_dir: /data/services
+tool_dir: /data/tools
+temp_dir: /data/temp
+vvic_dir: /data/vvic
+script_dir: /data/scripts
+cache_dir: /data/cache
+version_dir: /data/Version
+version_bk_dir: /data/Version/bakversion
+version_new_dir: /data/Version/newversion
+
+k8s_yaml_dir: /data/k8s-yaml/production
+configmap_dir: '{{ k8s_yaml_dir }}/configmap'
+deployment_dir: '{{ k8s_yaml_dir }}/deployment'
+slb_service_dir: '{{ k8s_yaml_dir }}/service'
+dockerfile_dir: '/data/dockerfile/dockerservice/{{ servername }}server'
+lib_dir: '/data/dockerfile/dockerservice/{{ servername }}server/lib'
+
+servername: '{{servername}}'
+namespace: vvic-pro-product
+apiVersion: v1
+JAVA_OPTS: -Xms256m -Xmx512m -Xss256k -XX:MetaspaceSize=64m -XX:MaxMetaspaceSize=128m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:SurvivorRatio=8
+apolloenv: pro
+apollourlenv: pro_meta=http://192.168.71.26:9080
+
+replicas: 2
+image: 'registry.cn-hangzhou.aliyuncs.com/vvic/{{ servername }}server:1.0.1'
+containerPort: '{{port}}'
+hostPort: '{{port}}'
+
+centosjdkenv: v2
+server_dir: '{{ service_dir }}/{{ servername }}server'
+loglevel: -Dlog4j.log.level=info
+jar_name: '{{jar_name}}'
+
+# 需要对外服务时添加slb
+slb_id: 
+slb_port: 
+slb_targetPort: 

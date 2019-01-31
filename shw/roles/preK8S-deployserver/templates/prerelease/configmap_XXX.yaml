@@ -1,0 +1,9 @@
+apiVersion: {{ apiVersion }}
+kind: ConfigMap
+metadata:
+  name: {{ servername }}-env
+  namespace: {{ namespace }}
+data:
+  DEFULT_JAVA_OPTS: "{{ JAVA_OPTS }}"
+  urlenv: "{{ apollourlenv }}"
+  environment: "{{ apolloenv }}"

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.beta.kubernetes.io/alicloud-loadbalancer-address-type: "intranet"
+    #service.beta.kubernetes.io/alicloud-loadbalancer-id: "{{ slb_id }}"
+    service.beta.kubernetes.io/alicloud-loadbalancer-id: "{{ slb_id }}"
+    service.beta.kubernetes.io/alicloud-loadbalancer-force-override-listeners: "true"
+  name: {{ servername }}-service
+  namespace: {{ namespace }}
+spec:
+  ports:
+   - port: {{ slb_port }}
+     targetPort: {{ slb_targetPort }}
+  selector:
+    app: {{ servername }}server
+  type: LoadBalancer
+

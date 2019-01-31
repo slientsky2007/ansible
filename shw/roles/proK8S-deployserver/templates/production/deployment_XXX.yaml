@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ servername }}server-deployment
+  namespace: {{ namespace }}
+spec:
+  replicas: {{ replicas }}
+  template:
+    metadata:
+      labels:
+        app: {{ servername }}server
+    spec:
+      containers:
+        - name: {{ servername }}server
+          image: "{{ image }}"
+          ports:
+            - name: {{ servername }}server
+              containerPort: {{ containerPort }}
+              hostPort: {{ hostPort }}
+          envFrom:
+            - configMapRef:
+                name: {{ servername }}-env
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              memory: 1Gi

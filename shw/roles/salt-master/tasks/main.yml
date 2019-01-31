@@ -1,0 +1,26 @@
+# possibly saved as ./roles/solr-cluster/tasks
+
+- name: 拷贝RPM 源安装包
+  copy: src={{rpm}} dest={{tool_dir}} owner={{user_run}} group={{user_run}} mode=0700
+  
+- name: 安装RPM源
+  shell: rpm -iUvh {{tool_dir}}/{{rpm}} --nodeps --force
+  
+- name: 清理yum缓存
+  shell: yum clean expire-cache
+  
+- name: 安装{{appname}}
+  shell: yum -y install {{appname}}
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: 设置开机启动{{appname}}
+  shell: chkconfig {{appname}} on
+  
+- name: 设置系统启动{{appname}}
+  shell: systemctl enable {{appname}}.service
+  
+- name: 更新配置文件/etc/salt/master
+  template: src=master dest=/etc/salt/master owner=root group=root mode=0644
+  
+- name: 启动服务{{appname}}
+  shell: systemctl restart {{appname}}

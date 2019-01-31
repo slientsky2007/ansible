@@ -1,0 +1,15 @@
+---
+# possibly saved as 
+
+- name: 先处理变量action
+  shell: echo {{action}}
+  register: a
+# - debug: var=a
+
+- name: 预发布k8s node节点{{ node_name }} 设置为不可调度模式
+  script: ~/ansible/vvic/roles/k8snode-control/templates/kubectl-cordon.sh "{{node}}" "{{action}}"
+  when: a.stdout == '0'
+  
+- name: 预发布k8s node节点{{ node_name }} 设置为可调度模式
+  script: ~/ansible/vvic/roles/k8snode-control/templates/kubectl-cordon.sh "{{node}}" "{{action}}"
+  when: a.stdout == '1'

@@ -1,0 +1,29 @@
+---
+# possibly saved as ansible/sysinit/roles/sysctl/defaults/main.yml
+# ara_apt_packages: 
+  # - gcc 
+  # - python-dev
+  # - libffi-dev
+  # - libssl-dev
+  # - python-pip
+  # - libxml2-dev
+  # - libxslt1-dev
+
+# ara_pip_packages:
+  # - tox
+  # - ara 
+user_run: vvic_run
+user_bi: vvic_user
+user_log: vvic_log
+
+path: /data
+log_dir: /data/logs
+software_dir: /data/softwares
+service_dir: /data/services
+tool_dir: /data/tools
+temp_dir: /data/temp
+
+appname: salt-master
+rpm: salt-repo-latest-2.el7.noarch.rpm
+
+

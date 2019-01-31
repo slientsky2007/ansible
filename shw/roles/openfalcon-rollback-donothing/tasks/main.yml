@@ -1,0 +1,15 @@
+---
+# possibly saved as 
+
+- name: 先处理变量node
+  shell: echo {{node}}
+  register: n
+# - debug: var=n
+  
+- name: 先处理变量action
+  shell: echo {{action}}
+  register: a
+# - debug: var=a
+
+- name: 无法执行回滚调用操作节点node：{{node}} 操作代码action：{{action}}
+  shell: echo ""

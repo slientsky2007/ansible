@@ -1,0 +1,19 @@
+---
+# possibly saved as 
+
+- name: 创建k8s环境变量配置文件{{configmap_dir}}/configmap_{{servername}}.yaml
+  template: src=production/configmap_XXX.yaml dest={{configmap_dir}}/configmap_{{servername}}.yaml owner=root group=root mode=0644
+
+- name: 创建k8s部署文件{{deployment_dir}}/deployment_{{servername}}.yaml
+  template: src=production/deployment_XXX.yaml dest={{deployment_dir}}/deployment_{{servername}}.yaml owner=root group=root mode=0644
+  
+# - name: 创建项目{{dockerfile_dir}}目录
+  # file: dest={{dockerfile_dir}} state=directory mode=0755 owner=root group=root
+  
+# - name: 创建项目{{lib_dir}}目录
+  # file: dest={{lib_dir}} state=directory mode=0755 owner=root group=root
+
+# - name: 创建镜像文件{{dockerfile_dir}}/Dockerfile
+  # template: src=XXXserver/Dockerfile dest={{dockerfile_dir}}/Dockerfile owner=root group=root mode=0644
+
+

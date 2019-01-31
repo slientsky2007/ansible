@@ -1,0 +1,10 @@
+/data/logs/nginx/*.log {
+    daily
+    dateext
+    compress
+    rotate 30
+    sharedscripts
+    postrotate
+        /usr/local/nginx/sbin/nginx -s reload
+    endscript
+}
