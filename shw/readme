@@ -1,0 +1,10 @@
+#1、初始化配置文件
+ansible-playbook /root/ansible/vvic/prok8s.yaml --extra-vars "servername=pmsdata port=8808 jar_name=vvic-pms-data-service.jar"
+
+2、创建k8s部署
+PS:预发布环境请在pre-k8s-master上执行；生产环境请在pro-k8s-master上执行
+#cd /data/k8s-yaml/prerelease/configmap
+#cd /data/k8s-yaml/production/configmap
+kubectl create -f configmap_test1.yaml
+
+3、录入数据库sql
