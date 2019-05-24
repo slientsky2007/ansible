@@ -5,6 +5,14 @@ metadata:
   namespace: vvic-pre-release
 spec:
   replicas: {{ replicas }}
+#滚动更新策略:最大激增数：25%, 最大无效数：25%
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  "revisionHistoryLimit": 10
+  "progressDeadlineSeconds": 600
   template:
     metadata:
       labels:
